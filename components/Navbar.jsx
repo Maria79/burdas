@@ -43,91 +43,89 @@ const Navbar = ({ dishes }) => {
       <div className="lg:hidden w-full flex items-center justify-between">
         <FaBars size={28} className="text-center" onClick={handleOpenMenu} />
         {openMenu && (
-          <div className="top-[180px] left-0 absolute w-full bg-[#b3b0b0] text-black px-4 py-6">
-            <ul>
-              <ul className="grid grid-cols-3 gap-2">
-                <li>
-                  <Link
-                    className="cursor-pointer"
-                    href="/menu/entrantes"
-                    onClick={() => setOpenMenu(false)}
-                  >
-                    Entrantes
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="cursor-pointer"
-                    href="/menu/perritos-calientes"
-                    onClick={() => setOpenMenu(false)}
-                  >
-                    Perritos Calientes
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="cursor-pointer"
-                    href="/menu/hamburguesas"
-                    onClick={() => setOpenMenu(false)}
-                  >
-                    Hamburguesas
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="cursor-pointer"
-                    href="/menu/enrollados"
-                    onClick={() => setOpenMenu(false)}
-                  >
-                    Enrollados
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="cursor-pointer"
-                    href="/menu/pepitos"
-                    onClick={() => setOpenMenu(false)}
-                  >
-                    Pepitos
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="cursor-pointer"
-                    href="/menu/bocadillos"
-                    onClick={() => setOpenMenu(false)}
-                  >
-                    Bocadillos
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="cursor-pointer"
-                    href="/menu/platos"
-                    onClick={() => setOpenMenu(false)}
-                  >
-                    Platos
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="cursor-pointer"
-                    href="/menu/postre"
-                    onClick={() => setOpenMenu(false)}
-                  >
-                    Postre
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="cursor-pointer"
-                    href="/menu/bebidas"
-                    onClick={() => setOpenMenu(false)}
-                  >
-                    Bebidas
-                  </Link>
-                </li>
-              </ul>
+          <div className="top-[185px] left-0 absolute w-full bg-[#e9e8e8] text-[#463d3d] px-8 py-10">
+            <ul className="grid grid-cols-2 gap-2 ">
+              <li>
+                <Link
+                  className="cursor-pointer font-semibold mb-2"
+                  href="/menu/entrantes"
+                  onClick={() => setOpenMenu(false)}
+                >
+                  Entrantes
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="cursor-pointer font-semibold mb-2"
+                  href="/menu/perritos-calientes"
+                  onClick={() => setOpenMenu(false)}
+                >
+                  Perritos Calientes
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="cursor-pointer font-semibold mb-2"
+                  href="/menu/hamburguesas"
+                  onClick={() => setOpenMenu(false)}
+                >
+                  Hamburguesas
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="cursor-pointer font-semibold mb-2"
+                  href="/menu/enrollados"
+                  onClick={() => setOpenMenu(false)}
+                >
+                  Enrollados
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="cursor-pointer font-semibold mb-2"
+                  href="/menu/pepitos"
+                  onClick={() => setOpenMenu(false)}
+                >
+                  Pepitos
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="cursor-pointer font-semibold mb-2"
+                  href="/menu/bocadillos"
+                  onClick={() => setOpenMenu(false)}
+                >
+                  Bocadillos
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="cursor-pointer font-semibold mb-2"
+                  href="/menu/platos"
+                  onClick={() => setOpenMenu(false)}
+                >
+                  Platos
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="cursor-pointer font-semibold mb-2"
+                  href="/menu/postre"
+                  onClick={() => setOpenMenu(false)}
+                >
+                  Postre
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="cursor-pointer font-semibold mb-2"
+                  href="/menu/bebidas"
+                  onClick={() => setOpenMenu(false)}
+                >
+                  Bebidas
+                </Link>
+              </li>
             </ul>
           </div>
         )}
@@ -150,9 +148,9 @@ const Navbar = ({ dishes }) => {
                 <button
                   key={index}
                   onClick={() => signIn(provider.id)}
-                  className="bg-white text-black px-8 py-4 shadow-md hover:bg-[#760e0d] hover:text-white hover:border hover:border-white rounded-xl"
+                  className="bg-white text-black px-8 py-2 shadow-md hover:bg-[#760e0d] hover:text-white hover:border hover:border-white rounded-xl"
                 >
-                  <span>Entrar</span>
+                  <span className="text-md font-semibold">Entrar</span>
                 </button>
               ))}
           </div>
@@ -229,9 +227,9 @@ const Navbar = ({ dishes }) => {
                 <button
                   key={index}
                   onClick={() => signIn(provider.id)}
-                  className="bg-white text-black px-8 py-4 shadow-md hover:bg-[#760e0d] hover:text-white hover:border hover:border-white rounded-xl"
+                  className="bg-white text-black px-8 py-2 shadow-md hover:bg-[#760e0d] hover:text-white hover:border hover:border-white rounded-xl"
                 >
-                  <span>Entrar</span>
+                  <span className="text-md font-semibold">Entrar</span>
                 </button>
               ))}
           </div>
