@@ -47,7 +47,11 @@ const Navbar = ({ dishes }) => {
             <ul>
               <ul className="grid grid-cols-3 gap-2">
                 <li>
-                  <Link className="cursor-pointer" href="/menu/entrantes">
+                  <Link
+                    className="cursor-pointer"
+                    href="/menu/entrantes"
+                    onClick={() => setOpenMenu(false)}
+                  >
                     Entrantes
                   </Link>
                 </li>
@@ -55,42 +59,71 @@ const Navbar = ({ dishes }) => {
                   <Link
                     className="cursor-pointer"
                     href="/menu/perritos-calientes"
+                    onClick={() => setOpenMenu(false)}
                   >
                     Perritos Calientes
                   </Link>
                 </li>
                 <li>
-                  <Link className="cursor-pointer" href="/menu/hamburguesas">
+                  <Link
+                    className="cursor-pointer"
+                    href="/menu/hamburguesas"
+                    onClick={() => setOpenMenu(false)}
+                  >
                     Hamburguesas
                   </Link>
                 </li>
                 <li>
-                  <Link className="cursor-pointer" href="/menu/enrollados">
+                  <Link
+                    className="cursor-pointer"
+                    href="/menu/enrollados"
+                    onClick={() => setOpenMenu(false)}
+                  >
                     Enrollados
                   </Link>
                 </li>
                 <li>
-                  <Link className="cursor-pointer" href="/menu/pepitos">
+                  <Link
+                    className="cursor-pointer"
+                    href="/menu/pepitos"
+                    onClick={() => setOpenMenu(false)}
+                  >
                     Pepitos
                   </Link>
                 </li>
                 <li>
-                  <Link className="cursor-pointer" href="/menu/bocadillos">
+                  <Link
+                    className="cursor-pointer"
+                    href="/menu/bocadillos"
+                    onClick={() => setOpenMenu(false)}
+                  >
                     Bocadillos
                   </Link>
                 </li>
                 <li>
-                  <Link className="cursor-pointer" href="/menu/platos">
+                  <Link
+                    className="cursor-pointer"
+                    href="/menu/platos"
+                    onClick={() => setOpenMenu(false)}
+                  >
                     Platos
                   </Link>
                 </li>
                 <li>
-                  <Link className="cursor-pointer" href="/menu/postre">
+                  <Link
+                    className="cursor-pointer"
+                    href="/menu/postre"
+                    onClick={() => setOpenMenu(false)}
+                  >
                     Postre
                   </Link>
                 </li>
                 <li>
-                  <Link className="cursor-pointer" href="/menu/bebidas">
+                  <Link
+                    className="cursor-pointer"
+                    href="/menu/bebidas"
+                    onClick={() => setOpenMenu(false)}
+                  >
                     Bebidas
                   </Link>
                 </li>

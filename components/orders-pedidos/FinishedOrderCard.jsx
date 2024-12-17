@@ -66,7 +66,6 @@ const FinishedOrderCard = ({
               <span className="font-semibold text-lg">{order.totalPrice}</span>
             </div>
           </div>
-          <p></p>
         </div>
         <div className="mt-4">
           {order.basket.map((item, index) => (
