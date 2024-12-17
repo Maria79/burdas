@@ -1,0 +1,308 @@
+[
+    {
+      "type": "hamburguesas",
+      "name": "pollo crispy",
+      "alergenos": "Contiene gluten, huevo, soja, lácteo, apio, mostaza y sésamo",
+      "description": "Hamburguesa con pechuga de pollo empanizada, lechuga, tomate, cebolla, queso amarillo, huevo, tocino, papas paja, ketchup, mayonesa y mostaza.",
+      "image": "pollo-crispy",
+      "imageUrl": "burger.jpg",
+      "price": "5.40"
+    },
+    {
+      "type": "hamburguesas",
+      "name": "burda's",
+      "alergenos": "Contiene gluten, huevo, soja, lácteo, apio, mostaza y sésamo",
+      "description": "Pan de hamburguesa, doble pechuga de pollo empanizada, doble queso cheddar, doble bacon, papas paja, ketchup, mayonesa y mostaza.",
+      "image": "burda",
+      "imageUrl": "burger.jpg",
+      "price": "7.80"
+    },
+    {
+      "type": "hamburguesas",
+      "name": "Canarita",
+      "alergenos": "Contiene gluten, huevo, soja, lácteo, apio, mostaza y sésamo",
+      "description": "Pan de hamburguesa, pechuga de pollo empanada, queso ahumado asado, lechuga, tomate, cebolla, queso amarillo, huevo, bacón, papas paja, ketchup, mayonesa y mostaza",
+      "image": "burda",
+      "imageUrl": "burger.jpg",
+      "price": "7.80"
+    },
+    {
+      "type": "hamburguesas",
+      "name": "llanera",
+      "alergenos": "Contiene gluten, huevo, soja, lácteo, apio, mostaza y sésamo",
+      "description": "pan de hamburguesa, pechuga de pollo empanada, queso blanco fresco asado, lechuga, tomate, cebolla, queso amarillo, huevo, bacón, papas paja, ketchup, mayonesa y mostaza.",
+      "image": "burda",
+      "imageUrl": "burger.jpg",
+      "price": "7.80"
+    },
+    {
+      "type": "hamburguesas",
+      "name": "hawaiana",
+      "alergenos": "Contiene gluten, huevo, soja, lácteo, apio, mostaza y sésamo",
+      "description": "pan de hamburguesa, pechuga de pollo empanada, piña asada, aguacate, lechuga, tomate, cebolla, queso amarillo, huevo, bacón, papas paja, ketchup, mayonesa y mostaza.",
+      "image": "burda",
+      "imageUrl": "burger.jpg",
+      "price": "7.80"
+    },
+    {
+      "type": "hamburguesas",
+      "name": "pija",
+      "alergenos": "Contiene gluten, huevo, soja, lácteo, apio, mostaza y sésamo",
+      "description": "pan de hamburguesa, pechuga de pollo empanada, queso blanco fresco asado, salsa de arándanos, lechuga, tomate, cebolla, queso amarillo, huevo, bacón, papas paja, ketchup, mayonesa y mostaza.",
+      "image": "burda",
+      "imageUrl": "burger.jpg",
+      "price": "7.80"
+    },
+    {
+      "type": "hamburguesas",
+      "name": "sensación",
+      "alergenos": "Contiene gluten, huevo, soja, lácteo, apio, mostaza y sésamo",
+      "description": "pan de hamburguesa, pechuga de pollo empanada, queso blanco fresco asado, plátano macho frito, aguacate, lechuga, tomate, cebolla, queso amarillo, huevo, bacón, papas paja, ketchup, mayonesa y mostaza.",
+      "image": "burda",
+      "imageUrl": "burger.jpg",
+      "price": "8.90"
+    },
+    {
+      "type": "hamburguesas",
+      "name": "vegetal",
+      "alergenos": "Contiene gluten, huevo, soja, lácteo, apio, mostaza y sésamo",
+      "description": "pan de hamburguesa, piña asada, queso blanco fresco asado, aguacate, lechuga, tomate, cebolla, ensalada de col dulce, papas paja, ketchup, mayonesa y mostaza.",
+      "image": "burda",
+      "imageUrl": "burger.jpg",
+      "price": "6.80"
+    },
+    {
+      "type": "bocadillos",
+      "name": "Burda's",
+      "alergenos": "Gluten, huevo, soja, lactosa, apio, mostaza, sésamo.",
+      "description": "Pan de bocadillo, pechuga de pollo empanizada, queso amarillo, ensalada, huevo, bacon y alioli.",
+      "image": "bocadillo",
+      "imageUrl": "bocadillo.jpg",
+      "price": "4.90"
+    },
+    {
+      "type": "perritos-calientes",
+      "name": "normal",
+      "alergenos": "gluten, huevo, soja, lácteos, apio, mostaza, sésamo",
+      "description": "pan de perro, salchicha, cebolla, papas paja, ketchup, mayonesa y mostaza.",
+      "image": "",
+      "imageUrl": "perrito-caliente.jpg",
+      "price": "1.90"
+    },
+    {
+      "type": "perritos-calientes",
+      "name": "especial",
+      "alergenos": "gluten, huevo, soja, lácteos, apio, mostaza, sésamo",
+      "description": "pan de perro, salchicha, cebolla, papas paja, ketchup, mayonesa, mostaza y queso.",
+      "image": "",
+      "imageUrl": "perrito-caliente.jpg",
+      "price": "2.50"
+    },
+    {
+      "type": "perritos-calientes",
+      "name": "perro burda's",
+      "alergenos": "gluten, huevo, soja, lácteos, apio, mostaza, sésamo",
+      "description": "pan de perro, pechuga de pollo empanada, cebolla, papas paja, ketchup, mayonesa, mostaza y queso.",
+      "image": "",
+      "imageUrl": "perrito-caliente.jpg",
+      "price": "3.50"
+    },
+    {
+      "type": "perritos-calientes",
+      "name": "perro gourmet sensación",
+      "alergenos": "gluten, huevo, soja, lácteos, apio, mostaza, sésamo",
+      "description": "pan de perro, pechuga de pollo empanada, cebolla, papas paja, queso blanco fresco asado, plátano macho frito, aguacate, ketchup, mayonesa, mostaza y queso amarillo.",
+      "image": "",
+      "imageUrl": "perrito-caliente.jpg",
+      "price": "3.90"
+    },
+    {
+      "type": "enrollados",
+      "name": "pollo crispy",
+      "alergenos": "gluten, huevo, soja, lácteos, apio, mostaza, sésamo",
+      "description": "tortilla de trigo, pechuga de pollo empanada, lechuga, tomate, cebolla, queso amarillo, huevo, bacón, papas paja y alioli.",
+      "image": "enrollados",
+      "imageUrl": "enrollado.jpg",
+      "price": "5.40"
+    },
+    {
+      "type": "enrollados",
+      "name": "canarito",
+      "alergenos": "gluten, huevo, soja, lácteos, apio, mostaza, sésamo",
+      "description": "tortilla de trigo, pechuga de pollo empanada, queso fresco ahumado asado, lechuga, tomate, cebolla, queso amarillo, huevo, bacón, papas paja y alioli.",
+      "image": "enrollados",
+      "imageUrl": "enrollado.jpg",
+      "price": "7.80"
+    },
+    {
+      "type": "enrollados",
+      "name": "llanero",
+      "alergenos": "gluten, huevo, soja, lácteos, apio, mostaza, sésamo",
+      "description": "tortilla de trigo, pechuga de pollo empanada, queso blanco fresco asado, lechuga, tomate, cebolla, queso amarillo, huevo, bacón, papas paja y alioli.",
+      "image": "enrollados",
+      "imageUrl": "enrollado.jpg",
+      "price": "7.80"
+    },
+    {
+      "type": "enrollados",
+      "name": "hawaiano",
+      "alergenos": "gluten, huevo, soja, lácteos, apio, mostaza, sésamo",
+      "description": "tortilla de trigo, pechuga de pollo empanada, piña asada, aguacate, lechuga, tomate, cebolla, queso amarillo, huevo, bacón, papas paja y alioli.",
+      "image": "enrollados",
+      "imageUrl": "enrollado.jpg",
+      "price": "7.80"
+    },
+    {
+      "type": "enrollados",
+      "name": "enrolladodado",
+      "alergenos": "gluten, huevo, soja, lácteos, apio, mostaza, sésamo",
+      "description": "tortilla de trigo, daditos de pechuga de pollo empanada, lechuga, tomate, cebolla, jamón, queso cheddar, huevo, bacón, papas fritas, ketchup, mayonesa y mostaza.",
+      "image": "enrollados",
+      "imageUrl": "enrollado.jpg",
+      "price": "7.80"
+    },
+    {
+      "type": "enrollados",
+      "name": "loco",
+      "alergenos": "gluten, huevo, soja, lácteos, apio, mostaza, sésamo",
+      "description": "tortilla de trigo, base de papas locas (jamón, queso amarillo, ketchup, mayonesa y mostaza), tiras de pechuga de pollo empanada, huevo, bacón.",
+      "image": "enrollados",
+      "imageUrl": "enrollado.jpg",
+      "price": "7.80"
+    },
+    {
+      "type": "enrollados",
+      "name": "pijo",
+      "alergenos": "gluten, huevo, soja, lácteos, apio, mostaza, sésamo",
+      "description": "tortilla de trigo, pechuga de pollo empanada, queso blanco fresco asado, salsa de arándanos, lechuga, tomate, cebolla, queso amarillo, huevo, bacón, papas paja y alioli.",
+      "image": "enrollados",
+      "imageUrl": "enrollado.jpg",
+      "price": "7.80"
+    },
+    {
+      "type": "enrollados",
+      "name": "sensacion",
+      "alergenos": "gluten, huevo, soja, lácteos, apio, mostaza, sésamo",
+      "description": "tortilla de trigo, pechuga de pollo empanada, queso blanco fresco asado, plátano macho frito, aguacate, lechuga, tomate, cebolla, queso amarillo, huevo, bacón, papas paja y alioli.",
+      "image": "enrollados",
+      "imageUrl": "enrollado.jpg",
+      "price": "8.90"
+    },
+    {
+      "type": "enrollados",
+      "name": "vegetal",
+      "alergenos": "gluten, huevo, soja, lácteos, apio, mostaza, sésamo",
+      "description": "tortilla de trigo, queso blanco fresco asado, plátano macho frito, aguacate, lechuga, tomate, cebolla, ensalada de col dulce, queso amarillo, huevo, papas paja y alioli.",
+      "image": "enrollados",
+      "imageUrl": "enrollado.jpg",
+      "price": "6.80"
+    },
+    {
+      "type": "platos",
+      "name": "8 tiras de pollo crispy, + 1 ración de papas fritas solas, +1 ensalada de col dulce",
+      "alergenos": "gluten, huevo, soja, lácteos, apio, mostaza, sésamo",
+      "description": "8 tiras de pechuga de pollo empanada",
+      "image": "platos",
+      "imageUrl": "bocadillo.jpg",
+      "price": "7.80"
+    },
+    {
+      "type": "platos",
+      "name": "8 tiras de pollo crispy",
+      "alergenos": "gluten, huevo, soja, lácteos, apio, mostaza, sésamo",
+      "description": "8 tiras de pechuga de pollo empanada",
+      "image": "platos",
+      "imageUrl": "bocadillo.jpg",
+      "price": "6.50"
+    },
+    {
+      "type": "entrantes",
+      "name": "queso blanco",
+      "alergenos": "alérgenos: gluten, huevo, soja, lácteos",
+      "description": "",
+      "image": "entrantes",
+      "imageUrl": "bocadillo.jpg",
+      "price": "4.50"
+    },
+    {
+      "type": "entrantes",
+      "name": "queso amarillo",
+      "alergenos": "alérgenos: gluten, huevo, soja, lácteos",
+      "description": "",
+      "image": "entrantes",
+      "imageUrl": "bocadillo.jpg",
+      "price": "4.50"
+    },
+    {
+      "type": "entrantes",
+      "name": "queso ahumado",
+      "alergenos": "alérgenos: gluten, huevo, soja, lácteos",
+      "description": "",
+      "image": "entrantes",
+      "imageUrl": "bocadillo.jpg",
+      "price": "4.50"
+    },
+    {
+      "type": "entrantes",
+      "name": "chocolate",
+      "alergenos": "gluten, huevo, soja, lácteos, frutos de cáscara",
+      "description": "",
+      "image": "entrantes",
+      "imageUrl": "bocadillo.jpg",
+      "price": "4.50"
+    },
+    {
+      "type": "entrantes",
+      "name": "papas solas",
+      "alergenos": "",
+      "description": "",
+      "image": "entrantes",
+      "imageUrl": "bocadillo.jpg",
+      "price": "3.00"
+    },
+    {
+      "type": "entrantes",
+      "name": "cono de papas y tiras de pollo crispy",
+      "alergenos": "gluten, huevo, soja, lácteos, apio, mostaza, sésamo",
+      "description": "papas fritas solas y tiras de pechuga de pollo empanad",
+      "image": "entrantes",
+      "imageUrl": "bocadillo.jpg",
+      "price": "4.50"
+    },
+    {
+      "type": "entrantes",
+      "name": "mini papas locas",
+      "alergenos": "soja, lácteos, huevo, sésamo, apio",
+      "description": "papas fritas, jamón, queso y salsas",
+      "image": "entrantes",
+      "imageUrl": "bocadillo.jpg",
+      "price": "2.50"
+    },
+    {
+      "type": "entrantes",
+      "name": "papas locas",
+      "alergenos": "soja, lácteos, huevo, sésamo, apio",
+      "description": "papas fritas, jamón, queso y salsas",
+      "image": "entrantes",
+      "imageUrl": "bocadillo.jpg",
+      "price": "4.80"
+    },
+    {
+      "type": "entrantes",
+      "name": "papas burda's",
+      "alergenos": "gluten, huevo, soja, lácteos, apio, mostaza, sésamo",
+      "description": "papas fritas, jamón, queso, salsas y tiras de pechuga de pollo empanada",
+      "image": "entrantes",
+      "imageUrl": "bocadillo.jpg",
+      "price": "6.50"
+    },
+    {
+      "type": "entrantes",
+      "name": "papas gourmet",
+      "alergenos": "gluten, huevo, soja, lácteos, apio, mostaza, sésamo",
+      "description": "papas fritas, bacón, queso, salsas, tiras de pechuga de pollo empanada y aguacate",
+      "image": "entrantes",
+      "imageUrl": "bocadillo.jpg",
+      "price": "8.90"
+    }
+  ]

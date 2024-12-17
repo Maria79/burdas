@@ -1,217 +1,43 @@
+"use client";
+
 import Image from "next/image";
 import itemImage from "@/assets/images/items/enrollado.jpg";
+import AddAmountCounter from "./AddAmountCounter";
+import { useSession } from "next-auth/react";
 
-const ItemCard = () => {
+const ItemCard = ({ dish, count, setCount }) => {
+  const { data: session } = useSession();
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2 py-6">
-      <div className="border border-gray-300 w-full p-7 rounded-md">
-        {/* title */}
-        <div className="text-lg font-semibold mb-4">
-          <h3>Pollo Crispy</h3>
-        </div>
-        {/* <Image /> */}
-        <div className="flex">
-          <Image
-            src={itemImage}
-            alt=""
-            sizes="50vw"
-            // Make the image display full width
-            style={{
-              width: "25%",
-              height: "auto",
-            }}
-          />
-          {/* corta description */}
-          <p className="pl-6 text-justify">
-            Tortilla de trigo, pechuga de pollo empanada, lechuga, tomate,
-            cebolla, queso amarillo, huevo, bacón, papas paja y alioli.
-          </p>
-        </div>
-        {/* precio */}
-        <div className="py-4 text-right">
-          <p>
-            <span className="font-semibold">Precio: </span>5,40€
-          </p>
-        </div>
-      </div>
-      <div className="border border-gray-300 w-full p-7 rounded-md">
-        {/* title */}
-        <div className="text-lg font-semibold mb-4">
-          <h3>Pollo Crispy</h3>
-        </div>
-        {/* <Image /> */}
-        <div className="flex">
-          <Image
-            src={itemImage}
-            alt=""
-            sizes="50vw"
-            // Make the image display full width
-            style={{
-              width: "25%",
-              height: "auto",
-            }}
-          />
-          {/* corta description */}
-          <p className="pl-6 text-justify">
-            Tortilla de trigo, pechuga de pollo empanada, lechuga, tomate,
-            cebolla, queso amarillo, huevo, bacón, papas paja y alioli.
-          </p>
-        </div>
-        {/* precio */}
-        <div className="py-4 text-right">
-          <p>
-            <span className="font-semibold">Precio: </span>5,40€
-          </p>
-        </div>
-      </div>
-      <div className="border border-gray-300 w-full p-7 rounded-md">
-        {/* title */}
-        <div className="text-lg font-semibold mb-4">
-          <h3>Pollo Crispy</h3>
-        </div>
-        {/* <Image /> */}
-        <div className="flex">
-          <Image
-            src={itemImage}
-            alt=""
-            sizes="50vw"
-            // Make the image display full width
-            style={{
-              width: "25%",
-              height: "auto",
-            }}
-          />
-          {/* corta description */}
-          <p className="pl-6 text-justify">
-            Tortilla de trigo, pechuga de pollo empanada, lechuga, tomate,
-            cebolla, queso amarillo, huevo, bacón, papas paja y alioli.
-          </p>
-        </div>
-        {/* precio */}
-        <div className="py-4 text-right">
-          <p>
-            <span className="font-semibold">Precio: </span>5,40€
-          </p>
-        </div>
-      </div>
-      <div className="border border-gray-300 w-full p-7 rounded-md">
-        {/* title */}
-        <div className="text-lg font-semibold mb-4">
-          <h3>Pollo Crispy</h3>
-        </div>
-        {/* <Image /> */}
-        <div className="flex">
-          <Image
-            src={itemImage}
-            alt=""
-            sizes="50vw"
-            // Make the image display full width
-            style={{
-              width: "25%",
-              height: "auto",
-            }}
-          />
-          {/* corta description */}
-          <p className="pl-6 text-justify">
-            Tortilla de trigo, pechuga de pollo empanada, lechuga, tomate,
-            cebolla, queso amarillo, huevo, bacón, papas paja y alioli.
-          </p>
-        </div>
-        {/* precio */}
-        <div className="py-4 text-right">
-          <p>
-            <span className="font-semibold">Precio: </span>5,40€
-          </p>
-        </div>
-      </div>
-      <div className="border border-gray-300 w-full p-7 rounded-md">
-        {/* title */}
-        <div className="text-lg font-semibold mb-4">
-          <h3>Pollo Crispy</h3>
-        </div>
-        {/* <Image /> */}
-        <div className="flex">
-          <Image
-            src={itemImage}
-            alt=""
-            sizes="50vw"
-            // Make the image display full width
-            style={{
-              width: "25%",
-              height: "auto",
-            }}
-          />
-          {/* corta description */}
-          <p className="pl-6 text-justify">
-            Tortilla de trigo, pechuga de pollo empanada, lechuga, tomate,
-            cebolla, queso amarillo, huevo, bacón, papas paja y alioli.
-          </p>
-        </div>
-        {/* precio */}
-        <div className="py-4 text-right">
-          <p>
-            <span className="font-semibold">Precio: </span>5,40€
-          </p>
-        </div>
-      </div>
-      <div className="border border-gray-300 w-full p-7 rounded-md">
-        {/* title */}
-        <div className="text-lg font-semibold mb-4">
-          <h3>Pollo Crispy</h3>
-        </div>
-        {/* <Image /> */}
-        <div className="flex">
-          <Image
-            src={itemImage}
-            alt=""
-            sizes="50vw"
-            // Make the image display full width
-            style={{
-              width: "25%",
-              height: "auto",
-            }}
-          />
-          {/* corta description */}
-          <p className="pl-6 text-justify">
-            Tortilla de trigo, pechuga de pollo empanada, lechuga, tomate,
-            cebolla, queso amarillo, huevo, bacón, papas paja y alioli.
-          </p>
-        </div>
-        {/* precio */}
-        <div className="py-4 text-right">
-          <p>
-            <span className="font-semibold">Precio: </span>5,40€
-          </p>
-        </div>
-      </div>
-      <div className="border border-gray-300 w-full p-7 rounded-md">
-        {/* title */}
-        <div className="text-lg font-semibold mb-4">
-          <h3>Pollo Crispy</h3>
-        </div>
-        {/* <Image /> */}
-        <div className="flex">
-          <Image
-            src={itemImage}
-            alt=""
-            sizes="50vw"
-            // Make the image display full width
-            style={{
-              width: "25%",
-              height: "auto",
-            }}
-          />
-          {/* corta description */}
-          <p className="pl-6 text-justify">
-            Tortilla de trigo, pechuga de pollo empanada, lechuga, tomate,
-            cebolla, queso amarillo, huevo, bacón, papas paja y alioli.
-          </p>
-        </div>
-        {/* precio */}
-        <div className="py-4 text-right">
-          <p>
-            <span className="font-semibold">Precio: </span>5,40€
-          </p>
+    <div className="border border-gray-300 w-full p-2 rounded-md shadow-md">
+      <div className="flex">
+        <Image
+          src={itemImage}
+          alt={dish.name}
+          sizes="50vw"
+          style={{
+            width: "25%",
+            height: "auto",
+          }}
+        />
+        <div className="px-4 w-full">
+          <div className="text-lg font-semibold mb-6 sm:mb-8">
+            <h3 className="capitalize first-letter:capitalize">{dish.name}</h3>
+          </div>
+          <div className="flex flex-col sm:flex-row justify-between">
+            <p className="mb-2 sm:mb-0">
+              <span className="font-semibold">Precio: </span>
+              {dish.price}€
+            </p>
+            {/* Pass the unique id to AddAmountCounter */}
+            {session && (
+              <AddAmountCounter
+                _id={dish._id}
+                count={count}
+                setCount={setCount}
+                dish={dish}
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>
