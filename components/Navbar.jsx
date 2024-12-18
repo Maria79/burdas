@@ -1,4 +1,5 @@
 "use client";
+
 import { useBasket } from "@/context/BasketContext";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -6,6 +7,18 @@ import { FaBars } from "react-icons/fa";
 import Profile from "./Profile";
 import Basket from "./Basket";
 import { signIn, useSession, getProviders } from "next-auth/react";
+
+const MENU_ITEMS = [
+  { name: "Entrantes", path: "/menu/entrantes" },
+  { name: "Perritos Calientes", path: "/menu/perritos-calientes" },
+  { name: "Hamburguesas", path: "/menu/hamburguesas" },
+  { name: "Enrollados", path: "/menu/enrollados" },
+  { name: "Pepitos", path: "/menu/pepitos" },
+  { name: "Bocadillos", path: "/menu/bocadillos" },
+  { name: "Platos", path: "/menu/platos" },
+  // { name: "Postre", path: "/menu/postre" },
+  // { name: "Bebidas", path: "/menu/bebidas" },
+];
 
 const Navbar = ({ dishes }) => {
   const { data: session } = useSession();
@@ -17,122 +30,37 @@ const Navbar = ({ dishes }) => {
 
   // Fetch authentication providers
   useEffect(() => {
-    const setAuthProviders = async () => {
-      const res = await getProviders();
-      setProviders(res);
-    };
+    const setAuthProviders = async () => setProviders(await getProviders());
     setAuthProviders();
   }, []);
 
-  // Total item count in the basket
   const totalCount = basket.reduce((sum, item) => sum + item.count, 0);
-
-  // Mobile menu toggle
-  const handleOpenMenu = () => {
-    setOpenMenu(!openMenu);
-  };
-
-  // Function to reset counts and clear the basket
-  const resetCounts = () => {
-    clearBasket(); // Clear the basket
-  };
 
   return (
     <>
       {/* Mobile menu */}
       <div className="lg:hidden w-full flex items-center justify-between">
-        <FaBars size={28} className="text-center" onClick={handleOpenMenu} />
+        <FaBars size={28} onClick={() => setOpenMenu((prev) => !prev)} />
         {openMenu && (
-          <div className="top-[185px] left-0 absolute w-full bg-[#e9e8e8] text-[#463d3d] px-8 py-10">
-            <ul className="grid grid-cols-2 gap-2 ">
-              <li>
-                <Link
-                  className="cursor-pointer font-semibold mb-2"
-                  href="/menu/entrantes"
-                  onClick={() => setOpenMenu(false)}
-                >
-                  Entrantes
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className="cursor-pointer font-semibold mb-2"
-                  href="/menu/perritos-calientes"
-                  onClick={() => setOpenMenu(false)}
-                >
-                  Perritos Calientes
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className="cursor-pointer font-semibold mb-2"
-                  href="/menu/hamburguesas"
-                  onClick={() => setOpenMenu(false)}
-                >
-                  Hamburguesas
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className="cursor-pointer font-semibold mb-2"
-                  href="/menu/enrollados"
-                  onClick={() => setOpenMenu(false)}
-                >
-                  Enrollados
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className="cursor-pointer font-semibold mb-2"
-                  href="/menu/pepitos"
-                  onClick={() => setOpenMenu(false)}
-                >
-                  Pepitos
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className="cursor-pointer font-semibold mb-2"
-                  href="/menu/bocadillos"
-                  onClick={() => setOpenMenu(false)}
-                >
-                  Bocadillos
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className="cursor-pointer font-semibold mb-2"
-                  href="/menu/platos"
-                  onClick={() => setOpenMenu(false)}
-                >
-                  Platos
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className="cursor-pointer font-semibold mb-2"
-                  href="/menu/postre"
-                  onClick={() => setOpenMenu(false)}
-                >
-                  Postre
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className="cursor-pointer font-semibold mb-2"
-                  href="/menu/bebidas"
-                  onClick={() => setOpenMenu(false)}
-                >
-                  Bebidas
-                </Link>
-              </li>
+          <div className="absolute top-[185px] left-0 w-full bg-[#e9e8e8] px-8 py-10 text-[#463d3d]">
+            <ul className="grid grid-cols-2 gap-2">
+              {MENU_ITEMS.map(({ name, path }) => (
+                <li key={path}>
+                  <Link
+                    className="cursor-pointer font-semibold mb-2"
+                    href={path}
+                    onClick={() => setOpenMenu(false)}
+                  >
+                    {name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
         )}
-
-        {session && (
+        {session ? (
           <div className="relative flex items-center space-x-4">
-            <Basket dishes={dishes} resetCounts={resetCounts} />
+            <Basket dishes={dishes} resetCounts={clearBasket} />
             {totalCount > 0 && (
               <div className="absolute -top-2 bg-black text-white rounded-full w-5 h-5 flex items-center justify-center text-sm">
                 {totalCount}
@@ -140,99 +68,52 @@ const Navbar = ({ dishes }) => {
             )}
             <Profile profileImage={profileImage} />
           </div>
-        )}
-        {!session && (
-          <div>
-            {providers &&
-              Object.values(providers).map((provider, index) => (
-                <button
-                  key={index}
-                  onClick={() => signIn(provider.id)}
-                  className="bg-white text-black px-8 py-2 shadow-md hover:bg-[#760e0d] hover:text-white hover:border hover:border-white rounded-xl"
-                >
-                  <span className="text-md font-semibold">Entrar</span>
-                </button>
-              ))}
-          </div>
+        ) : (
+          providers &&
+          Object.values(providers).map((provider) => (
+            <button
+              key={provider.id}
+              onClick={() => signIn(provider.id)}
+              className="bg-white text-black px-8 py-2 shadow-md hover:bg-[#760e0d] hover:text-white rounded-xl"
+            >
+              Entrar
+            </button>
+          ))
         )}
       </div>
 
       {/* Desktop menu */}
       <nav className="hidden lg:flex w-full justify-between items-center">
-        <ul className="flex space-x-4 max-w-fit mx-auto">
-          <li>
-            <Link className="cursor-pointer" href="/menu/entrantes">
-              Entrantes
-            </Link>
-          </li>
-          <li>
-            <Link className="cursor-pointer" href="/menu/perritos-calientes">
-              Perritos Calientes
-            </Link>
-          </li>
-          <li>
-            <Link className="cursor-pointer" href="/menu/hamburguesas">
-              Hamburguesas
-            </Link>
-          </li>
-          <li>
-            <Link className="cursor-pointer" href="/menu/enrollados">
-              Enrollados
-            </Link>
-          </li>
-          <li>
-            <Link className="cursor-pointer" href="/menu/pepitos">
-              Pepitos
-            </Link>
-          </li>
-          <li>
-            <Link className="cursor-pointer" href="/menu/bocadillos">
-              Bocadillos
-            </Link>
-          </li>
-          <li>
-            <Link className="cursor-pointer" href="/menu/platos">
-              Platos
-            </Link>
-          </li>
-          <li>
-            <Link className="cursor-pointer" href="/menu/postre">
-              Postre
-            </Link>
-          </li>
-          <li>
-            <Link className="cursor-pointer" href="/menu/bebidas">
-              Bebidas
-            </Link>
-          </li>
+        <ul className="flex mx-auto space-x-4">
+          {MENU_ITEMS.map(({ name, path }) => (
+            <li key={path}>
+              <Link className="cursor-pointer" href={path}>
+                {name}
+              </Link>
+            </li>
+          ))}
         </ul>
-        {session && (
-          <div className="self-end">
-            <div className="relative flex items-center space-x-4">
-              <Basket dishes={dishes} resetCounts={resetCounts} />
-              {totalCount > 0 && (
-                <div className="absolute -top-2 bg-black text-white rounded-full w-5 h-5 flex items-center justify-center text-sm">
-                  {totalCount}
-                </div>
-              )}
-
-              <Profile profileImage={profileImage} />
-            </div>
+        {session ? (
+          <div className="relative flex items-center space-x-4">
+            <Basket dishes={dishes} resetCounts={clearBasket} />
+            {totalCount > 0 && (
+              <div className="absolute -top-2 bg-black text-white rounded-full w-5 h-5 flex items-center justify-center text-sm">
+                {totalCount}
+              </div>
+            )}
+            <Profile profileImage={profileImage} />
           </div>
-        )}
-        {!session && (
-          <div>
-            {providers &&
-              Object.values(providers).map((provider, index) => (
-                <button
-                  key={index}
-                  onClick={() => signIn(provider.id)}
-                  className="bg-white text-black px-8 py-2 shadow-md hover:bg-[#760e0d] hover:text-white hover:border hover:border-white rounded-xl"
-                >
-                  <span className="text-md font-semibold">Entrar</span>
-                </button>
-              ))}
-          </div>
+        ) : (
+          providers &&
+          Object.values(providers).map((provider) => (
+            <button
+              key={provider.id}
+              onClick={() => signIn(provider.id)}
+              className="bg-white text-black px-8 py-2 shadow-md hover:bg-[#760e0d] hover:text-white rounded-xl"
+            >
+              Entrar
+            </button>
+          ))
         )}
       </nav>
     </>

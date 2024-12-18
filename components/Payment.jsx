@@ -9,31 +9,28 @@ const Payment = () => {
   const { basket, clearBasket } = useBasket();
   const router = useRouter();
 
-  // Calculate the total price of the basket
-  const totalPrice = new Intl.NumberFormat("de-DE", {
-    style: "currency",
-    currency: "EUR",
-  }).format(
-    basket.reduce((total, item) => {
+  // Calculate total price
+  const calculateTotalPrice = () => {
+    return basket.reduce((total, item) => {
       const itemTotal =
         item.count && item.price
           ? item.count * Number(item.price.replace(",", "."))
           : 0;
       return total + itemTotal;
-    }, 0) // Initial total is 0
-  );
-
-  const handleCheckboxChange = (option) => {
-    setSelectedOption((prevOption) => (prevOption === option ? "" : option));
+    }, 0);
   };
 
+  const totalPrice = new Intl.NumberFormat("de-DE", {
+    style: "currency",
+    currency: "EUR",
+  }).format(calculateTotalPrice());
+
+  // Handle order submission
   const handleSendOrder = async () => {
     try {
       const response = await fetch("/api/orders", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           basket,
           paymentMethod: selectedOption,
@@ -43,10 +40,8 @@ const Payment = () => {
 
       if (response.ok) {
         console.log("Order submitted successfully!");
-        clearBasket(); // Clear the basket after successful order
-
-        console.log("Redirecting to home...");
-        router.push("/menu/entrantes"); // Navigate to the home page
+        clearBasket(); // Clear basket
+        router.push("/menu/entrantes"); // Navigate to a menu page
       } else {
         const error = await response.json();
         console.error("Error submitting order:", error);
@@ -59,144 +54,99 @@ const Payment = () => {
   return (
     <div className="w-[360px] md:w-[475px] bg-[#e3e2e2] mt-16 rounded-lg">
       <form className="py-8 px-8">
+        {/* Basket Details */}
         <div className="mb-4">
-          <h3 className="text-lg font-semibold">Pedido:</h3>
-          <div>
-            {basket.map((item) => (
-              <div key={item._id} className="px-2 mb-2">
-                <div className="flex">
-                  <p className="w-full text-nowrap text-sm">
-                    - <span className="capitalize">{item.type}</span> _{" "}
-                    <span className="font-semibold capitalize truncate inline-flex max-w-[170px]">
-                      {item.name}
-                    </span>{" "}
-                    <span>{`${item.count > 1 ? `x ${item.count}` : ""}`}</span>
-                  </p>
-                  <div className="text-sm">
-                    {item.count && item.price
-                      ? new Intl.NumberFormat("de-DE", {
-                          style: "currency",
-                          currency: "EUR",
-                        }).format(
-                          item.count * Number(item.price.replace(",", "."))
-                        )
-                      : "€0.00"}
-                  </div>
-                </div>
-              </div>
-            ))}
-            <hr className="border border-red-700" />
-            <div className="px-2 mt-2 text-right font-semibold">
-              Total: {totalPrice}
+          <div className="mb-4">
+            <h3 className="text-lg font-semibold">Pedido:</h3>
+          </div>
+          {basket.map((item) => (
+            <div key={item._id} className="flex justify-between text-sm mb-2">
+              <span>
+                - <span className="capitalize">{item.type}</span> _{" "}
+                <span className="capitalize">{item.name}</span>{" "}
+                {item.count > 1 ? `x${item.count}` : ""}
+              </span>
+              <span>
+                {new Intl.NumberFormat("de-DE", {
+                  style: "currency",
+                  currency: "EUR",
+                }).format(item.count * Number(item.price.replace(",", ".")))}
+              </span>
             </div>
+          ))}
+          <hr className="border border-red-700" />
+          <div className="text-right font-semibold mt-2">
+            Total: {totalPrice}
           </div>
         </div>
-        <div className="flex justify-between">
-          <div className="">
-            <input
-              className="mr-4"
-              type="checkbox"
-              name="onStore"
-              id="onStore"
-              checked={selectedOption === "onStore"}
-              onChange={() => handleCheckboxChange("onStore")}
-            />
-            <label htmlFor="onStore">Al recoger</label>
-          </div>
-          <div className="">
-            <input
-              className="mr-4"
-              type="checkbox"
-              name="creditCard"
-              id="creditCard"
-              checked={selectedOption === "creditCard"}
-              onChange={() => handleCheckboxChange("creditCard")}
-            />
-            <label htmlFor="creditCard">Con tarjeta</label>
-          </div>
+
+        {/* Payment Options */}
+        <div className="flex justify-between my-8">
+          {["onStore", "creditCard"].map((option) => (
+            <div key={option}>
+              <input
+                className="mr-4"
+                type="radio"
+                name="paymentMethod"
+                id={option}
+                checked={selectedOption === option}
+                disabled={option === "creditCard"} // Disable "Con tarjeta"
+                onChange={() => setSelectedOption(option)}
+              />
+              <label
+                htmlFor={option}
+                className={`${option === "creditCard" ? "text-gray-400" : ""}`}
+              >
+                {option === "onStore" ? "Al recoger" : "Con tarjeta"}
+              </label>
+            </div>
+          ))}
         </div>
+
+        {/* Credit Card Details */}
         {selectedOption === "creditCard" && (
-          <div className="pt-8">
-            <div className="flex flex-col  mb-4">
+          <div>
+            <div className="flex flex-col mb-4">
               <label htmlFor="nameCard" className="mb-2">
                 Nombre en tarjeta
               </label>
-              <input
-                className="p-2"
-                type="text"
-                name="nameCard"
-                id="nameCard"
-                maxLength={16}
-                minLength={16}
-              />
+              <input className="p-2" type="text" id="nameCard" />
             </div>
-            <div className="flex flex-col  mb-4">
+            <div className="flex flex-col mb-4">
               <label htmlFor="cardNumber" className="mb-2">
                 Número de tarjeta
               </label>
-              <input
-                className="p-2"
-                type="number"
-                name="cardNumber"
-                id="cardNumber"
-                maxLength={16}
-                minLength={16}
-              />
+              <input className="p-2" type="number" id="cardNumber" />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-4">
-              <div className="flex flex-col">
-                <label htmlFor="" className="mb-2">
-                  Fecha de expiración
-                </label>
-                <input
-                  className="p-2"
-                  type="text"
-                  name=""
-                  id=""
-                  placeholder="MM / YY"
-                />
+            <div className="grid grid-cols-2 gap-2 mb-4">
+              <div>
+                <label className="mb-2">Fecha de expiración</label>
+                <input className="p-2" type="text" placeholder="MM / YY" />
               </div>
-              <div className="flex flex-col">
-                <label htmlFor="" className="mb-2">
-                  Código de seguridad
-                </label>
-                <input
-                  className="p-2"
-                  type="text"
-                  name=""
-                  id=""
-                  placeholder="CVC"
-                />
+              <div>
+                <label className="mb-2">Código de seguridad</label>
+                <input className="p-2" type="text" placeholder="CVC" />
               </div>
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col mb-4">
               <label htmlFor="country" className="mb-2">
                 País
               </label>
-              <input className="p-2" type="text" name="country" id="country" />
-            </div>
-            <div className="text-center py-8">
-              <button
-                type="button"
-                onClick={handleSendOrder}
-                className="px-8 py-2 bg-green-500 rounded-md text-white shadow-md "
-              >
-                Pagar
-              </button>
+              <input className="p-2" type="text" id="country" />
             </div>
           </div>
         )}
-        {selectedOption === "onStore" && (
-          <div className="text-center pt-8">
-            <button
-              type="button"
-              onClick={handleSendOrder}
-              className="px-8 py-2 bg-green-500 rounded-md text-white shadow-md "
-            >
-              Enviar
-            </button>
-          </div>
-        )}
+
+        {/* Submit Button */}
+        <div className="text-center my-4">
+          <button
+            type="button"
+            onClick={handleSendOrder}
+            className="px-8 py-2 bg-green-500 rounded-md text-white shadow-md"
+          >
+            {selectedOption === "onStore" ? "Enviar" : "Pagar"}
+          </button>
+        </div>
       </form>
     </div>
   );
