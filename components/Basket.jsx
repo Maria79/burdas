@@ -34,12 +34,12 @@ const Basket = () => {
       <div className="relative">
         <FaShoppingBasket
           onClick={toggleBasket}
-          size={24}
+          size={28}
           className="cursor-pointer"
         />
       </div>
       {openBasket && basket.length > 0 && (
-        <div className="absolute w-[380px] min-w-[350px] bg-white -right-[6px] top-[40px] rounded-md text-black border border-[#760e0d] px-2 py-4">
+        <div className="absolute w-[360px] -right-[14px] top-[40px] px-2 py-4 rounded-md bg-white  text-black border border-[#760e0d]">
           <h2 className="text-xl font-semibold mb-4">Tu pedido:</h2>
           {basket.map(({ _id, type, name, count, price }) => (
             <div key={_id} className="px-2 mb-2 flex justify-between">
