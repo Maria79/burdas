@@ -3,6 +3,7 @@ import Navbar from "./Navbar";
 import logo from "@/assets/images/burda-logo.png";
 import connectDB from "@/config/database";
 import Dishes from "@/models/Dishes";
+import User from "@/models/User";
 
 export const fetchDishes = async (typeParams) => {
   await connectDB();

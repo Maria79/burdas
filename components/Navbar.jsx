@@ -66,7 +66,7 @@ const Navbar = ({ dishes }) => {
                 {totalCount}
               </div>
             )}
-            <Profile profileImage={profileImage} />
+            <Profile profileImage={profileImage} session={session} />
           </div>
         ) : (
           providers &&
@@ -101,7 +101,7 @@ const Navbar = ({ dishes }) => {
                 {totalCount}
               </div>
             )}
-            <Profile profileImage={profileImage} />
+            <Profile profileImage={profileImage} session={session} />
           </div>
         ) : (
           providers &&

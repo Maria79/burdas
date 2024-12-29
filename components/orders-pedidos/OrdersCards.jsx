@@ -14,9 +14,9 @@ const OrdersCards = ({ initialOrders }) => {
         const data = await response.json();
         setFilteredOrders(
           data.filter(
-            (order) => order.status.received && !order.status.inProgress
+            (order) => order.status.received // Only include orders where `received` is true
           )
-        ); // Only include orders where `inProgress` is false
+        );
       } else {
         console.error("Failed to fetch orders");
       }
@@ -25,11 +25,20 @@ const OrdersCards = ({ initialOrders }) => {
     }
   };
 
-  // Poll the server every 10 seconds
+  // Poll the server every  ...
   useEffect(() => {
+    // Function to check if the current time is between 18:00 and 00:00
+    const isWithinPollingHours = () => {
+      const now = new Date();
+      const currentHour = now.getHours();
+      return currentHour >= 18 && currentHour < 24; // Between 18:00 and 00:00
+    };
+
     const interval = setInterval(() => {
-      fetchOrders(); // Fetch orders on every interval
-    }, 1000); // 10 seconds
+      if (isWithinPollingHours()) {
+        fetchOrders(); // Fetch orders only if within polling hours
+      }
+    }, 5000); // seconds
 
     // Cleanup on component unmount
     return () => clearInterval(interval);
