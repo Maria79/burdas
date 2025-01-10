@@ -20,10 +20,15 @@ const Profile = ({ profileImage, session }) => {
       router.push(`/usuario/${session.user.id}`);
     }
   };
+  const navigateToProfileHistory = () => {
+    if (session?.user?.id) {
+      router.push(`/usuario/${session.user.id}/historial`);
+    }
+  };
   return (
     <>
       <div className="relative">
-        <div onClick={handleOpenMenu}>
+        <div onClick={handleOpenMenu} className="cursor-pointer">
           {profileImage ? (
             <Image
               className="h-8 w-8 rounded-full"
@@ -38,7 +43,7 @@ const Profile = ({ profileImage, session }) => {
         </div>
       </div>
       {openMenu && (
-        <div className="absolute w-[130px] bg-white -right-10 top-16 rounded-md text-black border border-[#760e0d] px-2 py-4">
+        <div className="absolute w-[130px] bg-white -right-4 top-10 rounded-md text-black border border-[#760e0d] px-2 py-4">
           <ul>
             <li
               className="text-nowrap mb-1 hover:shadow-md cursor-pointer"
@@ -46,11 +51,16 @@ const Profile = ({ profileImage, session }) => {
             >
               Profile
             </li>
-            <li className="text-nowrap mb-1 hover:shadow-md cursor-pointer">
+            <li
+              className="text-nowrap mb-1 hover:shadow-md cursor-pointer"
+              onClick={navigateToProfileHistory}
+            >
               Orders
             </li>
             <li className="text-nowrap mb-1 hover:shadow-md cursor-pointer">
-              <button onClick={() => signOut()}>Sign Out</button>
+              <button onClick={() => signOut({ callbackUrl: "/" })}>
+                Sign Out
+              </button>
             </li>
           </ul>
         </div>

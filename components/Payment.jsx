@@ -80,6 +80,11 @@ const Payment = () => {
           </div>
         </div>
 
+        <small className="text-xs text-gray-400">
+          * Solo se procesarán los pedidos recibidos dentro del horario de
+          apertura del establecimiento.
+        </small>
+
         {/* Payment Options */}
         <div className="flex justify-between my-8">
           {["onStore", "creditCard"].map((option) => (

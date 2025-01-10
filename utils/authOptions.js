@@ -42,12 +42,22 @@ export const authOptions = {
       }
     },
     async session({ session }) {
-      // Fetch user from the database using email
-      const user = await User.findOne({ email: session.user.email });
-      if (user) {
-        session.user.id = user._id.toString(); // Add user ID to the session
+      try {
+        await connectDB();
+
+        // Attach user ID to session
+        const user = await User.findOne({ email: session.user.email });
+        if (user) {
+          session.user.id = user._id.toString();
+        } else {
+          console.warn(`User not found for email: ${session.user.email}`);
+        }
+
+        return session;
+      } catch (error) {
+        console.error("Error during session callback:", error);
+        throw new Error("Session retrieval failed");
       }
-      return session;
     },
   },
   secret: process.env.NEXTAUTH_SECRET, // Ensure this is set in your environment variables

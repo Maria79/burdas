@@ -73,7 +73,10 @@ const Navbar = ({ dishes }) => {
           Object.values(providers).map((provider) => (
             <button
               key={provider.id}
-              onClick={() => signIn(provider.id)}
+              onClick={() => {
+                signIn(provider.id);
+                //window.location.reload(); // Esto recarga la página
+              }}
               className="bg-white text-black px-8 py-2 shadow-md hover:bg-[#760e0d] hover:text-white rounded-xl"
             >
               Entrar

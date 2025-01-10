@@ -20,7 +20,7 @@ export const fetchOrders = async (idParams) => {
   }
 };
 
-const UserPage = async ({ params }) => {
+const UserHistory = async ({ params }) => {
   // Check user session
   const session = await getServerSession(authOptions);
 
@@ -93,4 +93,4 @@ const UserPage = async ({ params }) => {
   );
 };
 
-export default UserPage;
+export default UserHistory;
