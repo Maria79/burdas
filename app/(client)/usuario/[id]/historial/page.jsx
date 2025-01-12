@@ -10,7 +10,9 @@ export const fetchOrders = async (idParams) => {
     await connectDB();
 
     // Fetch all orders for the given userId
-    const orders = await Orders.find({ userId: idParams });
+    const orders = await Orders.find({ userId: idParams }).sort({
+      createdAt: -1,
+    });
 
     // Convert the result to JSON-friendly format
     return JSON.parse(JSON.stringify(orders));
