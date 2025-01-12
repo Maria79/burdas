@@ -19,11 +19,13 @@ const Profile = ({ profileImage, session }) => {
     if (session?.user?.id) {
       router.push(`/usuario/${session.user.id}`);
     }
+    setOpenMenu(false);
   };
   const navigateToProfileHistory = () => {
     if (session?.user?.id) {
       router.push(`/usuario/${session.user.id}/historial`);
     }
+    setOpenMenu(false);
   };
   return (
     <>
@@ -55,11 +57,11 @@ const Profile = ({ profileImage, session }) => {
               className="text-nowrap mb-1 hover:shadow-md cursor-pointer"
               onClick={navigateToProfileHistory}
             >
-              Orders
+              Historial
             </li>
             <li className="text-nowrap mb-1 hover:shadow-md cursor-pointer">
               <button onClick={() => signOut({ callbackUrl: "/" })}>
-                Sign Out
+                Salir
               </button>
             </li>
           </ul>

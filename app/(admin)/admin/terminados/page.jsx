@@ -17,10 +17,10 @@ const FinishedOrdersPage = async () => {
   return (
     <>
       <div className="px-4 pt-16">
-        <h1 className="text-2xl font-bold">Pedidos:</h1>
+        {/* <h1 className="text-2xl font-bold">Pedidos:</h1> */}
 
         <div className="">
-          <h2>Pedidos terminados</h2>
+          <h2 className="text-2xl font-semibold">Pedidos terminados:</h2>
           <FinishedOrdersCards initialOrders={finishedOrders} />
         </div>
       </div>

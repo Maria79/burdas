@@ -59,8 +59,8 @@ const UserPage = async ({ params }) => {
   });
 
   return (
-    <div>
-      <h1>{userOrders.length > 1 ? "Más de un pedido." : "Un pedido."}</h1>
+    <div className="py-8 px-4">
+      {/* <h1 className="text-xl">Su historial de pedidos.</h1> */}
       <div className="w-fit px-2 py-4">
         {userOrders.map(({ _id, createdAt, basket, totalPrice }) => (
           <div
