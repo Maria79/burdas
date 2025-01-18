@@ -1,6 +1,11 @@
 import "@/assets/style/global.css";
 
-export default function RootLayout({ children }) {
+export const metadata = {
+  title: "Admin: Pedidos",
+  description: "",
+};
+
+export default function PedidosLayout({ children }) {
   return (
     <html lang="en">
       <body>
