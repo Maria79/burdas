@@ -51,22 +51,38 @@ const Payment = () => {
     }
   };
 
+  const isWithinActiveHours = () => {
+    const now = new Date();
+    const currentHour = now.getHours();
+    return currentHour >= 18 && currentHour < 23; // Between 18:00 and 23:00
+  };
+
+  // Handle cancel action
+  const handleCancel = () => {
+    router.back(); // Navigate back to the previous page
+  };
+
   return (
-    <div className="w-[360px] md:w-[475px] bg-[#e3e2e2] mt-16 rounded-lg">
-      <form className="py-8 px-8">
+    <div className="w-full max-w-md mx-auto bg-gray-100 mt-16 rounded-lg shadow-md">
+      <form className="py-8 px-8 space-y-6">
         {/* Basket Details */}
-        <div className="mb-4">
-          <div className="mb-4">
-            <h3 className="text-lg font-semibold">Pedido:</h3>
-          </div>
+        <div className="mb-6">
+          <h3 className="text-lg font-semibold mb-4 border-b border-gray-300 pb-2">
+            Pedido
+          </h3>
           {basket.map((item) => (
-            <div key={item._id} className="flex justify-between text-sm mb-2">
-              <span>
+            <div
+              key={item._id}
+              className="flex justify-between items-center text-sm mb-2"
+            >
+              <span className="truncate">
                 - <span className="capitalize">{item.type}</span> _{" "}
-                <span className="capitalize">{item.name}</span>{" "}
-                {item.count > 1 ? `x${item.count}` : ""}
+                <span className="capitalize font-medium">{item.name}</span>{" "}
+                {item.count > 1 && (
+                  <span className="text-gray-600">x{item.count}</span>
+                )}
               </span>
-              <span>
+              <span className="font-semibold text-gray-700">
                 {new Intl.NumberFormat("de-DE", {
                   style: "currency",
                   currency: "EUR",
@@ -74,80 +90,133 @@ const Payment = () => {
               </span>
             </div>
           ))}
-          <hr className="border border-red-700" />
-          <div className="text-right font-semibold mt-2">
+          <hr className="border-gray-300 my-4" />
+          <div className="text-right font-semibold text-lg">
             Total: {totalPrice}
           </div>
         </div>
 
-        <small className="text-xs text-gray-400">
+        <p className="text-xs text-gray-500 italic">
           * Solo se procesarán los pedidos recibidos dentro del horario de
           apertura del establecimiento.
-        </small>
+        </p>
 
         {/* Payment Options */}
-        <div className="flex justify-between my-8">
-          {["onStore", "creditCard"].map((option) => (
-            <div key={option}>
-              <input
-                className="mr-4"
-                type="radio"
-                name="paymentMethod"
-                id={option}
-                checked={selectedOption === option}
-                disabled={option === "creditCard"} // Disable "Con tarjeta"
-                onChange={() => setSelectedOption(option)}
-              />
+        <div className="my-6">
+          <h3 className="text-sm font-medium text-gray-700 mb-4">
+            Método de pago
+          </h3>
+          <div className="flex justify-between items-center space-x-4">
+            {["onStore", "creditCard"].map((option) => (
               <label
+                key={option}
                 htmlFor={option}
-                className={`${option === "creditCard" ? "text-gray-400" : ""}`}
+                className={`flex items-center space-x-2 cursor-pointer ${
+                  option === "creditCard" ? "text-gray-400" : "text-gray-800"
+                }`}
               >
-                {option === "onStore" ? "Al recoger" : "Con tarjeta"}
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  id={option}
+                  checked={selectedOption === option}
+                  disabled={option === "creditCard"}
+                  onChange={() => setSelectedOption(option)}
+                  className="accent-[#760e0d]"
+                />
+                <span>
+                  {option === "onStore" ? "Al recoger" : "Con tarjeta"}
+                </span>
               </label>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         {/* Credit Card Details */}
         {selectedOption === "creditCard" && (
-          <div>
-            <div className="flex flex-col mb-4">
-              <label htmlFor="nameCard" className="mb-2">
+          <div className="space-y-4">
+            <div className="flex flex-col">
+              <label
+                htmlFor="nameCard"
+                className="text-sm font-medium text-gray-700"
+              >
                 Nombre en tarjeta
               </label>
-              <input className="p-2" type="text" id="nameCard" />
+              <input
+                className="p-2 border border-gray-300 rounded-md"
+                type="text"
+                id="nameCard"
+              />
             </div>
-            <div className="flex flex-col mb-4">
-              <label htmlFor="cardNumber" className="mb-2">
+            <div className="flex flex-col">
+              <label
+                htmlFor="cardNumber"
+                className="text-sm font-medium text-gray-700"
+              >
                 Número de tarjeta
               </label>
-              <input className="p-2" type="number" id="cardNumber" />
+              <input
+                className="p-2 border border-gray-300 rounded-md"
+                type="number"
+                id="cardNumber"
+              />
             </div>
-            <div className="grid grid-cols-2 gap-2 mb-4">
-              <div>
-                <label className="mb-2">Fecha de expiración</label>
-                <input className="p-2" type="text" placeholder="MM / YY" />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col">
+                <label className="text-sm font-medium text-gray-700">
+                  Fecha de expiración
+                </label>
+                <input
+                  className="p-2 border border-gray-300 rounded-md"
+                  type="text"
+                  placeholder="MM / YY"
+                />
               </div>
-              <div>
-                <label className="mb-2">Código de seguridad</label>
-                <input className="p-2" type="text" placeholder="CVC" />
+              <div className="flex flex-col">
+                <label className="text-sm font-medium text-gray-700">
+                  Código de seguridad
+                </label>
+                <input
+                  className="p-2 border border-gray-300 rounded-md"
+                  type="text"
+                  placeholder="CVC"
+                />
               </div>
             </div>
-            <div className="flex flex-col mb-4">
-              <label htmlFor="country" className="mb-2">
+            <div className="flex flex-col">
+              <label
+                htmlFor="country"
+                className="text-sm font-medium text-gray-700"
+              >
                 País
               </label>
-              <input className="p-2" type="text" id="country" />
+              <input
+                className="p-2 border border-gray-300 rounded-md"
+                type="text"
+                id="country"
+              />
             </div>
           </div>
         )}
 
-        {/* Submit Button */}
-        <div className="text-center my-4">
+        {/* Submit and Cancel Buttons */}
+        <div className="flex justify-between space-x-4">
+          <button
+            type="button"
+            onClick={handleCancel}
+            className="px-8 py-2 text-lg font-medium rounded-md shadow-md bg-gray-300 text-gray-700 hover:bg-gray-400"
+          >
+            Cancelar
+          </button>
           <button
             type="button"
             onClick={handleSendOrder}
-            className="px-8 py-2 bg-green-500 rounded-md text-white shadow-md"
+            className={`px-8 py-2 text-lg font-medium rounded-md shadow-md transition-all ${
+              isWithinActiveHours()
+                ? "bg-green-500 text-white hover:bg-green-400"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
+            disabled={!isWithinActiveHours()}
           >
             {selectedOption === "onStore" ? "Enviar" : "Pagar"}
           </button>

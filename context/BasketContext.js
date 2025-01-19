@@ -6,9 +6,14 @@ const BasketContext = createContext();
 
 export const BasketProvider = ({ children }) => {
   const [basket, setBasket] = useState([]);
-  const [counts, setCounts] = useState({}); // Track counts globally
+  const [counts, setCounts] = useState({});
 
-  // Rehydrate basket and counts from localStorage when the app loads
+  // Helper function to sync with localStorage
+  const syncLocalStorage = (key, value) => {
+    localStorage.setItem(key, JSON.stringify(value));
+  };
+
+  // Rehydrate basket and counts from localStorage
   useEffect(() => {
     const savedBasket = localStorage.getItem("basket");
     const savedCounts = localStorage.getItem("counts");
@@ -16,14 +21,16 @@ export const BasketProvider = ({ children }) => {
     if (savedCounts) setCounts(JSON.parse(savedCounts));
   }, []);
 
-  // Save basket and counts to localStorage whenever they change
+  // Sync basket and counts to localStorage
   useEffect(() => {
-    localStorage.setItem("basket", JSON.stringify(basket));
-    localStorage.setItem("counts", JSON.stringify(counts));
+    syncLocalStorage("basket", basket);
+    syncLocalStorage("counts", counts);
   }, [basket, counts]);
 
-  // Add or update item count in the basket and global counts
+  // Add or update item in the basket
   const addToBasket = (item) => {
+    if (!item || !item._id) return;
+
     setBasket((prevBasket) => {
       const existingItem = prevBasket.find((i) => i._id === item._id);
       if (existingItem) {
@@ -40,8 +47,22 @@ export const BasketProvider = ({ children }) => {
     }));
   };
 
-  // Decrement item count in basket and global counts
+  const removeFromBasket = (_id) => {
+    if (!_id) return;
+
+    setBasket((prevBasket) => prevBasket.filter((item) => item._id !== _id));
+
+    setCounts((prevCounts) => {
+      const updatedCounts = { ...prevCounts };
+      delete updatedCounts[_id];
+      return updatedCounts;
+    });
+  };
+
+  // Decrement item count in the basket
   const decrementFromBasket = (_id) => {
+    if (!_id) return;
+
     setBasket((prevBasket) =>
       prevBasket
         .map((item) =>
@@ -52,17 +73,28 @@ export const BasketProvider = ({ children }) => {
 
     setCounts((prevCounts) => {
       const updatedCounts = { ...prevCounts };
-      if (updatedCounts[_id] > 0) updatedCounts[_id] -= 1;
-      if (updatedCounts[_id] === 0) delete updatedCounts[_id];
+      if (updatedCounts[_id]) updatedCounts[_id] -= 1;
+      if (updatedCounts[_id] <= 0) delete updatedCounts[_id];
       return updatedCounts;
     });
   };
 
-  // Clear basket and counts
+  // Clear the basket and reset counts
   const clearBasket = () => {
     setBasket([]);
-    setCounts({}); // Reset all counts to 0
+    setCounts({});
   };
+
+  // Get total count of items in the basket
+  const getTotalCount = () =>
+    basket.reduce((total, item) => total + item.count, 0);
+
+  // Get total price of items in the basket
+  const getTotalPrice = () =>
+    basket.reduce((total, item) => {
+      const itemTotal = item.count * Number(item.price?.replace(",", ".") || 0);
+      return total + itemTotal;
+    }, 0);
 
   return (
     <BasketContext.Provider
@@ -70,8 +102,11 @@ export const BasketProvider = ({ children }) => {
         basket,
         counts,
         addToBasket,
+        removeFromBasket,
         decrementFromBasket,
         clearBasket,
+        getTotalCount,
+        getTotalPrice,
       }}
     >
       {children}
@@ -79,4 +114,5 @@ export const BasketProvider = ({ children }) => {
   );
 };
 
+// Hook to use the BasketContext
 export const useBasket = () => useContext(BasketContext);

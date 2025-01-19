@@ -56,20 +56,20 @@ const OrdersCards = ({ initialOrders }) => {
     const diffInMinutes = (now - createdAt) / (1000 * 60);
     return diffInMinutes <= 10;
   });
-  const ordersBetween8And15Minutes = filteredOrders.filter((order) => {
+  const ordersBetween10And20Minutes = filteredOrders.filter((order) => {
     const createdAt = new Date(order.createdAt);
     const diffInMinutes = (now - createdAt) / (1000 * 60);
-    return diffInMinutes > 8 && diffInMinutes <= 15;
+    return diffInMinutes > 10 && diffInMinutes <= 20;
   });
-  const ordersBetween15And30Minutes = filteredOrders.filter((order) => {
+  const ordersBetween20And30Minutes = filteredOrders.filter((order) => {
     const createdAt = new Date(order.createdAt);
     const diffInMinutes = (now - createdAt) / (1000 * 60);
-    return diffInMinutes > 15 && diffInMinutes <= 30;
+    return diffInMinutes > 20 && diffInMinutes <= 30;
   });
   const getBackgroundColor = (order) => {
     if (latestOrders.includes(order)) return "bg-green-100";
-    if (ordersBetween8And15Minutes.includes(order)) return "bg-yellow-100";
-    if (ordersBetween15And30Minutes.includes(order)) return "bg-red-100";
+    if (ordersBetween10And20Minutes.includes(order)) return "bg-yellow-100";
+    if (ordersBetween20And30Minutes.includes(order)) return "bg-red-100";
     return "bg-gray-100";
   };
 

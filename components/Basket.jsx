@@ -4,18 +4,25 @@ import { useBasket } from "@/context/BasketContext";
 import { useState } from "react";
 import { FaShoppingBasket } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { IoRemoveCircleOutline } from "react-icons/io5";
 
 const Basket = () => {
   const [openBasket, setOpenBasket] = useState(false);
-  const { basket, clearBasket } = useBasket();
+  const { basket, clearBasket, removeFromBasket } = useBasket();
   const router = useRouter();
+  const { data: session } = useSession();
 
   const toggleBasket = () => setOpenBasket((prev) => !prev);
 
   const handleAction = (action) => {
-    if (action === "cancel") clearBasket();
-    if (action === "pay") router.push("/pagar");
+    if (action === "cancel") setOpenBasket(!openBasket);
+    if (action === "pay") router.push(`/usuario/${session.user.id}/pagar`);
     setOpenBasket(false);
+  };
+
+  const handleRemoveItem = (id) => {
+    removeFromBasket(id); // Use the context function directly
   };
 
   const formatPrice = (price) =>
@@ -38,35 +45,56 @@ const Basket = () => {
           className="cursor-pointer"
         />
       </div>
-      {openBasket && basket.length > 0 && (
-        <div className="absolute w-[360px] -right-[14px] top-[40px] px-2 py-4 rounded-md bg-white  text-black border border-[#760e0d]">
-          <h2 className="text-xl font-semibold mb-4">Tu pedido:</h2>
-          {basket.map(({ _id, type, name, count, price }) => (
-            <div key={_id} className="px-2 mb-2 flex justify-between">
-              <p className="w-full text-sm truncate">
-                - <span className="capitalize">{type}</span> _{" "}
-                <span className="font-semibold capitalize">{name}</span>
-                {count > 1 && ` x ${count}`}
-              </p>
-              <div className="text-sm">
-                {formatPrice(count * Number(price?.replace(",", ".") || 0))}
+      {openBasket && basket.length != 0 && (
+        <div className="absolute w-[360px] -right-4 top-[40px] px-4 py-6 bg-white text-gray-800 border border-gray-300 rounded-lg shadow-lg z-50">
+          <h2 className="text-lg font-bold text-[#760e0d] border-b border-gray-200 pb-2 mb-4">
+            Tu pedido
+          </h2>
+          <div className="space-y-3 max-h-[300px] overflow-y-auto">
+            {basket.map(({ _id, type, name, count, price }) => (
+              <div
+                key={_id}
+                className="flex justify-between items-center text-sm bg-gray-50 p-2 rounded-md shadow-sm"
+              >
+                <div className="flex-1 truncate">
+                  - <span className="capitalize text-gray-700">{type}</span> _{" "}
+                  <span className="capitalize font-semibold text-gray-900">
+                    {name}
+                  </span>{" "}
+                  {count > 1 && (
+                    <span className="text-gray-500 text-sm">x{count}</span>
+                  )}
+                </div>
+                <div className="flex items-center space-x-4">
+                  <span className="font-medium text-gray-700">
+                    {formatPrice(count * Number(price?.replace(",", ".") || 0))}
+                  </span>
+                  <IoRemoveCircleOutline
+                    size={24}
+                    className="text-red-500 hover:text-red-600 cursor-pointer transition duration-200"
+                    onClick={() => handleRemoveItem(_id)}
+                  />
+                </div>
               </div>
-            </div>
-          ))}
-          <hr />
-          <div className="px-2 mt-4 text-right font-semibold">
-            Total: {formatPrice(totalAmount)}
+            ))}
           </div>
-          <div className="flex justify-end space-x-4 pt-8">
+          <hr className="border-gray-200 my-4" />
+          <div className="flex justify-between items-center px-2">
+            <span className="text-lg font-bold text-gray-900">Total:</span>
+            <span className="text-lg font-bold text-gray-900">
+              {formatPrice(totalAmount)}
+            </span>
+          </div>
+          <div className="flex justify-between space-x-4 mt-6">
             <button
               onClick={() => handleAction("cancel")}
-              className="bg-[#c9c8c7] text-sm px-8 py-2 rounded-md"
+              className="w-full py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition duration-200"
             >
-              Cancel
+              Cerrar
             </button>
             <button
               onClick={() => handleAction("pay")}
-              className="bg-[#93e0a4] text-sm px-8 py-2 rounded-md"
+              className="w-full py-2 text-sm font-medium text-white bg-[#93e0a4] rounded-md hover:bg-[#76c18a] transition duration-200"
             >
               Pagar
             </button>
