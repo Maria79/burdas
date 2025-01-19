@@ -54,12 +54,19 @@ const Navbar = ({ dishes }) => {
   return (
     <>
       {/* Mobile menu */}
-      <div className="lg:hidden w-full flex items-center justify-between">
-        <FaBars size={28} onClick={() => setOpenMenu((prev) => !prev)} />
+      <div className="lg:hidden w-full flex items-center justify-between relative">
+        {/* Menu Icon */}
+        <FaBars
+          size={28}
+          onClick={() => setOpenMenu((prev) => !prev)}
+          className="cursor-pointer text-white hover:text-gray-300 transition-all"
+        />
+
+        {/* Mobile Dropdown */}
         {openMenu && (
           <div
             ref={menuRef}
-            className="absolute top-[185px] left-0 w-full bg-white px-6 py-8 text-gray-800 shadow-lg border-t border-gray-200 z-50"
+            className="absolute top-[60px] left-0 w-full bg-white px-6 py-6 text-gray-800 shadow-lg border-t border-gray-200 z-50"
           >
             <ul className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {MENU_ITEMS.map(({ name, path }) => (
@@ -77,65 +84,76 @@ const Navbar = ({ dishes }) => {
           </div>
         )}
 
-        {session ? (
-          <div className="relative flex items-center space-x-4">
-            <Basket dishes={dishes} resetCounts={clearBasket} />
-            {totalCount > 0 && (
-              <div className="absolute -top-2 bg-black text-white rounded-full w-5 h-5 flex items-center justify-center text-sm">
-                {totalCount}
+        {/* Profile and Basket */}
+        <div className="flex items-center space-x-4">
+          {session ? (
+            <>
+              <div className="relative">
+                <Basket dishes={dishes} resetCounts={clearBasket} />
+                {basket.length > 0 && (
+                  <div className="absolute -top-2 -right-2 bg-black text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                    {basket.reduce((sum, item) => sum + item.count, 0)}
+                  </div>
+                )}
               </div>
-            )}
-            <Profile profileImage={profileImage} session={session} />
-          </div>
-        ) : (
-          providers &&
-          Object.values(providers).map((provider) => (
-            <button
-              key={provider.id}
-              onClick={() => {
-                signIn(provider.id);
-              }}
-              className="bg-white text-black px-8 py-2 shadow-md hover:bg-[#760e0d] hover:text-white rounded-xl"
-            >
-              Entrar
-            </button>
-          ))
-        )}
+              <Profile profileImage={profileImage} session={session} />
+            </>
+          ) : (
+            providers &&
+            Object.values(providers).map((provider) => (
+              <button
+                key={provider.id}
+                onClick={() => signIn(provider.id)}
+                className="bg-white text-black px-8 py-2 shadow-md hover:bg-[#760e0d] hover:text-white rounded-lg transition-all"
+              >
+                Entrar
+              </button>
+            ))
+          )}
+        </div>
       </div>
 
       {/* Desktop menu */}
-      <nav className="hidden lg:flex w-full justify-between items-center">
-        <ul className="flex mx-auto space-x-4">
+      <nav className="hidden lg:flex w-full justify-between items-center py-4">
+        <ul className="flex mx-auto space-x-6">
           {MENU_ITEMS.map(({ name, path }) => (
             <li key={path}>
-              <Link className="cursor-pointer" href={path}>
+              <Link
+                className="text-white font-medium text-sm hover:text-gray-300 transition-all"
+                href={path}
+              >
                 {name}
               </Link>
             </li>
           ))}
         </ul>
-        {session ? (
-          <div className="relative flex items-center space-x-4">
-            <Basket dishes={dishes} resetCounts={clearBasket} />
-            {totalCount > 0 && (
-              <div className="absolute -top-2 bg-black text-white rounded-full w-5 h-5 flex items-center justify-center text-sm">
-                {totalCount}
+
+        <div className="flex items-center space-x-6">
+          {session ? (
+            <>
+              <div className="relative">
+                <Basket dishes={dishes} resetCounts={clearBasket} />
+                {basket.length > 0 && (
+                  <div className="absolute -top-2 -right-2 bg-black text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                    {basket.reduce((sum, item) => sum + item.count, 0)}
+                  </div>
+                )}
               </div>
-            )}
-            <Profile profileImage={profileImage} session={session} />
-          </div>
-        ) : (
-          providers &&
-          Object.values(providers).map((provider) => (
-            <button
-              key={provider.id}
-              onClick={() => signIn(provider.id)}
-              className="bg-white text-black px-8 py-2 shadow-md hover:bg-[#760e0d] hover:text-white rounded-xl"
-            >
-              Entrar
-            </button>
-          ))
-        )}
+              <Profile profileImage={profileImage} session={session} />
+            </>
+          ) : (
+            providers &&
+            Object.values(providers).map((provider) => (
+              <button
+                key={provider.id}
+                onClick={() => signIn(provider.id)}
+                className="bg-white text-black px-8 py-2 shadow-md hover:bg-[#760e0d] hover:text-white rounded-lg transition-all"
+              >
+                Entrar
+              </button>
+            ))
+          )}
+        </div>
       </nav>
     </>
   );
