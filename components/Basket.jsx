@@ -38,7 +38,7 @@ const Basket = () => {
 
   return (
     <>
-      <div className="relative">
+      <div className="">
         <FaShoppingBasket
           onClick={toggleBasket}
           size={28}
@@ -46,7 +46,7 @@ const Basket = () => {
         />
       </div>
       {openBasket && basket.length != 0 && (
-        <div className="absolute w-[360px] -right-4 top-[40px] px-4 py-6 bg-white text-gray-800 border border-gray-300 rounded-lg shadow-lg z-50">
+        <div className="absolute w-[360px] md:w-[460px] -right-16 md:-right-6 top-[40px] px-4 py-6 bg-white text-gray-800 border border-gray-300 rounded-lg shadow-lg z-50">
           <h2 className="text-lg font-bold text-[#760e0d] border-b border-gray-200 pb-2 mb-4">
             Tu pedido
           </h2>
