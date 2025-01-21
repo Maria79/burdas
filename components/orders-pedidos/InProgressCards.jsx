@@ -40,6 +40,7 @@ const InProgressCards = ({ initialOrders }) => {
     return () => clearInterval(interval);
   }, []);
 
+  // Remove item
   const removeOrder = (orderId) => {
     setFilteredOrders((prevOrders) =>
       prevOrders.filter((order) => order._id !== orderId)

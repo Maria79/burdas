@@ -1,98 +1,55 @@
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/utils/authOptions";
 import connectDB from "@/config/database";
 import Orders from "@/models/Orders";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/utils/authOptions"; // Update with the correct path to your NextAuth configuration
+import BasketWrapper from "@/components/BasketWrapper";
 
-// Fetch orders for a specific user by userId
 export const fetchOrders = async (idParams) => {
   try {
-    // Connect to the database
     await connectDB();
-
-    // Fetch all orders for the given userId
-    const orders = await Orders.find({ userId: idParams }).sort({
-      createdAt: -1,
-    });
-
-    // Convert the result to JSON-friendly format
+    const orders = await Orders.find({ userId: idParams });
     return JSON.parse(JSON.stringify(orders));
   } catch (error) {
     console.error("Error fetching orders:", error);
-    return []; // Return an empty array in case of an error
+    return [];
   }
 };
 
-const UserHistory = async ({ params }) => {
-  // Check user session
+const UserPage = async ({ params }) => {
   const session = await getServerSession(authOptions);
 
-  if (!session || !session.user || !session.user.id) {
+  if (!session || !session.user?.id) {
     return (
-      <div>
-        <h1>Unauthorized</h1>
-        <p>You need to sign in to view your orders.</p>
+      <div className="text-center mt-16">
+        <h1 className="text-2xl font-semibold text-red-500">Unauthorized</h1>
+        <p className="text-lg">You need to sign in to view your orders.</p>
       </div>
     );
   }
 
-  const userId = params.id; // Extract the userId from the route parameters
+  const { id: userId } = params;
 
-  // Ensure the logged-in user's ID matches the requested userId
   if (userId !== session.user.id) {
     return (
-      <div>
-        <h1>Access Denied</h1>
-        <p>You cannot view orders for another user.</p>
+      <div className="text-center mt-16">
+        <h1 className="text-2xl font-semibold text-red-500">Access Denied</h1>
+        <p className="text-lg">You cannot view orders for another user.</p>
       </div>
     );
   }
 
-  // Fetch orders for the given userId
   const userOrders = await fetchOrders(userId);
 
-  if (!userOrders || userOrders.length === 0) {
-    return <div>No ha realizado ningún pedido aún.</div>;
+  if (userOrders.length === 0) {
+    return (
+      <div className="text-center mt-16">
+        <h1 className="text-2xl font-semibold">No Orders Found</h1>
+        <p className="text-lg">You haven't placed any orders yet.</p>
+      </div>
+    );
   }
 
-  const formatter = new Intl.DateTimeFormat("en-GB", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
-
-  return (
-    <div className="py-8 px-4">
-      {/* <h1>{userOrders.length > 1 ? "Más de un pedido." : "Un pedido."}</h1> */}
-      <div className="w-fit px-2 py-4">
-        {userOrders.map(({ _id, createdAt, basket, totalPrice }) => (
-          <div
-            key={_id}
-            className="border border-zinc-400 px-2 py-4 mb-2 rounded-md shadow-md"
-          >
-            <div className="text-right">
-              Fecha:{" "}
-              <span>
-                {formatter.format(new Date(createdAt)).replace(/\//g, "-")}
-              </span>
-            </div>
-            <div>
-              Pedidos:
-              {basket.map(({ type, name, count }, index) => (
-                <div key={index} className="mt-1">
-                  - <span className="capitalize">{type}</span> -{" "}
-                  <span className="font-semibold capitalize">{name}</span> x{" "}
-                  <span className="font-semibold">{count}</span>
-                </div>
-              ))}
-            </div>
-            <div className="mt-2">
-              Precio Total: <span className="font-semibold">{totalPrice}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+  return <BasketWrapper userOrders={userOrders} />;
 };
 
-export default UserHistory;
+export default UserPage;

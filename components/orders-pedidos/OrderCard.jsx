@@ -25,14 +25,6 @@ const OrderCard = ({ order, backgroundColor, removeOrder, username }) => {
     <div
       className={`px-8 py-8 border border-[#760e0d] rounded-md shadow-sm ${backgroundColor}`}
     >
-      <div>
-        <button
-          onClick={handleInProgress}
-          className="border border-gray-300 px-4 py-2 rounded-md bg-slate-500 text-white shadow-md hover:bg-slate-400 hover:text-black"
-        >
-          In Process
-        </button>
-      </div>
       <div className="flex justify-end">
         <TimeCounter createdAt={order.createdAt} />
       </div>
@@ -48,6 +40,14 @@ const OrderCard = ({ order, backgroundColor, removeOrder, username }) => {
             <BasketOrder order={item} key={index} />
           ))}
         </div>
+      </div>
+      <div className="mt-8">
+        <button
+          onClick={handleInProgress}
+          className="border border-gray-300 px-4 py-2 rounded-md bg-slate-500 text-white shadow-md hover:bg-slate-400 hover:text-black"
+        >
+          In Process
+        </button>
       </div>
     </div>
   );

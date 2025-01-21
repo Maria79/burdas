@@ -14,7 +14,7 @@ const OrdersCards = ({ initialOrders }) => {
         const data = await response.json();
         setFilteredOrders(
           data.filter(
-            (order) => order.status.received // Only include orders where `received` is true
+            (order) => order.status.received && !order.status.inProgress
           )
         );
       } else {
@@ -74,8 +74,8 @@ const OrdersCards = ({ initialOrders }) => {
   };
 
   return (
-    <div className="py-8">
-      <div className="grid grid-cols-1 gap-2">
+    <div className="py-8 ">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
         {filteredOrders.map((order) => (
           <OrderCard
             key={order._id}

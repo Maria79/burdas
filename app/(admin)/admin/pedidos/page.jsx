@@ -26,6 +26,7 @@ const PedidosPage = async () => {
       <div className="px-4 pt-16">
         {/* <h1 className="text-2xl font-bold mb-4">Pedidos:</h1> */}
         <div className="flex flex-col md:flex-row gap-2">
+          {/* <div className="w-full md:border-r md:pr-2 md:w-1/2"> */}
           <div className="w-full md:border-r md:pr-2 md:w-1/2">
             <h2 className="text-2xl font-semibold">Pedidos recibidos:</h2>
             <OrdersCards initialOrders={receivedOrders} />

@@ -10,7 +10,9 @@ export const fetchOrders = async (idParams) => {
     await connectDB();
 
     // Fetch all orders for the given userId
-    const orders = await Orders.find({ userId: idParams });
+    const orders = await Orders.find({ userId: idParams }).sort({
+      createdAt: -1,
+    });
 
     // Convert the result to JSON-friendly format
     return JSON.parse(JSON.stringify(orders));
@@ -20,129 +22,71 @@ export const fetchOrders = async (idParams) => {
   }
 };
 
-const UserPage = async ({ params }) => {
+const UserHistory = async ({ params }) => {
+  // Check user session
   const session = await getServerSession(authOptions);
 
-  if (!session || !session.user?.id) {
+  if (!session || !session.user || !session.user.id) {
     return (
-      <div className="text-center mt-16">
-        <h1 className="text-2xl font-semibold text-red-500">Unauthorized</h1>
-        <p className="text-lg">You need to sign in to view your orders.</p>
+      <div>
+        <h1>Unauthorized</h1>
+        <p>You need to sign in to view your orders.</p>
       </div>
     );
   }
 
-  const { id: userId } = params;
+  const userId = params.id; // Extract the userId from the route parameters
 
+  // Ensure the logged-in user's ID matches the requested userId
   if (userId !== session.user.id) {
     return (
-      <div className="text-center mt-16">
-        <h1 className="text-2xl font-semibold text-red-500">Access Denied</h1>
-        <p className="text-lg">You cannot view orders for another user.</p>
+      <div>
+        <h1>Access Denied</h1>
+        <p>You cannot view orders for another user.</p>
       </div>
     );
   }
 
+  // Fetch orders for the given userId
   const userOrders = await fetchOrders(userId);
 
-  if (userOrders.length === 0) {
-    return (
-      <div className="text-center mt-16">
-        <h1 className="text-2xl font-semibold">No Orders Found</h1>
-        <p className="text-lg">You haven't placed any orders yet.</p>
-      </div>
-    );
+  if (!userOrders || userOrders.length === 0) {
+    return <div>No ha realizado ningún pedido aún.</div>;
   }
 
-  const formatDate = (date) =>
-    new Intl.DateTimeFormat("en-GB", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    })
-      .format(new Date(date))
-      .replace(/\//g, "-");
-
-  // Group orders by basket
-  const groupOrdersByBasket = (orders) => {
-    const groups = {};
-
-    orders.forEach((order) => {
-      // Create a unique identifier for the basket
-      const basketKey = JSON.stringify(
-        order.basket.map((item) => ({
-          name: item.name,
-          type: item.type,
-          count: item.count,
-          price: item.price,
-        }))
-      );
-
-      if (!groups[basketKey]) {
-        groups[basketKey] = [];
-      }
-
-      groups[basketKey].push(order);
-    });
-
-    // Convert groups to an array and sort by the newest order in each group
-    return Object.values(groups).sort((a, b) => {
-      const latestA = new Date(a[a.length - 1].createdAt);
-      const latestB = new Date(b[b.length - 1].createdAt);
-      return latestB - latestA; // Sort by descending date
-    });
-  };
-
-  const groupedOrders = groupOrdersByBasket(userOrders);
+  const formatter = new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
 
   return (
-    <div className="py-8 px-4 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-center">
-        Your Grouped Order History
-      </h1>
-      <div className="space-y-6">
-        {groupedOrders.map((group, groupIndex) => (
+    <div className="py-8 px-4">
+      {/* <h1>{userOrders.length > 1 ? "Más de un pedido." : "Un pedido."}</h1> */}
+      <div className="w-fit px-2 py-4">
+        {userOrders.map(({ _id, createdAt, basket, totalPrice }) => (
           <div
-            key={groupIndex}
-            className="border border-gray-300 px-4 py-6 rounded-md shadow-md bg-white"
+            key={_id}
+            className="border border-zinc-400 px-2 py-4 mb-2 rounded-md shadow-md"
           >
-            <div>
-              <h2 className="font-semibold text-lg mb-2">Order Group:</h2>
-              <div className="space-y-4">
-                {group[0].basket.map((item, index) => (
-                  <div
-                    key={index}
-                    className="p-3 border rounded-md shadow-sm bg-gray-50"
-                  >
-                    <div className="capitalize font-medium text-gray-700">
-                      {item.name}
-                    </div>
-                    <div className="text-sm text-gray-600">
-                      <span className="capitalize">{item.type}</span> x{" "}
-                      <span className="font-semibold">{item.count}</span>
-                    </div>
-                    <div className="text-right text-gray-800 font-semibold">
-                      €
-                      {(
-                        item.count * Number(item.price.replace(",", "."))
-                      ).toFixed(2)}
-                    </div>
-                  </div>
-                ))}
-              </div>
+            <div className="text-right">
+              Fecha:{" "}
+              <span>
+                {formatter.format(new Date(createdAt)).replace(/\//g, "-")}
+              </span>
             </div>
-            <div className="mt-4">
-              <h3 className="font-semibold">Orders in this group:</h3>
-              {group.map(({ _id, createdAt, totalPrice }) => (
-                <div key={_id} className="mt-2">
-                  <p className="text-sm">
-                    Date: <span>{formatDate(createdAt)}</span>
-                  </p>
-                  {/* <p className="text-sm">
-                    Total Price: <span>€{totalPrice}</span>
-                  </p> */}
+            <div>
+              Pedidos:
+              {basket.map(({ type, name, count }, index) => (
+                <div key={index} className="mt-1">
+                  - <span className="capitalize">{type}</span> -{" "}
+                  <span className="font-semibold capitalize">{name}</span> x{" "}
+                  <span className="font-semibold">{count}</span>
                 </div>
               ))}
+            </div>
+            <div className="mt-2">
+              Precio Total: <span className="font-semibold">{totalPrice}</span>
             </div>
           </div>
         ))}
@@ -151,4 +95,4 @@ const UserPage = async ({ params }) => {
   );
 };
 
-export default UserPage;
+export default UserHistory;

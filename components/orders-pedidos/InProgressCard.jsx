@@ -27,14 +27,6 @@ const InProgressCard = ({ order, backgroundColor, removeOrder, username }) => {
     <div
       className={`px-8 py-8 border border-[#760e0d] rounded-md shadow-sm ${backgroundColor}`}
     >
-      <div>
-        <button
-          onClick={handleReadyToPick}
-          className="border border-gray-300 px-4 py-2 rounded-md bg-slate-500 text-white shadow-md hover:bg-slate-400 hover:text-black"
-        >
-          Terminado
-        </button>
-      </div>
       <div className="flex justify-end">
         <TimeCounter createdAt={order.createdAt} />
       </div>
@@ -49,19 +41,27 @@ const InProgressCard = ({ order, backgroundColor, removeOrder, username }) => {
           </span>
         </div>
         <div>
-          <p>
+          {/* <p>
             Pago:{" "}
             <span className="font-semibold mr-6">
               {order.paymentMethod === "onStore" ? "En tienda" : "Con tarjeta"}
             </span>
             Total: <span className="font-semibold">{order.totalPrice}</span>
-          </p>
+          </p> */}
         </div>
         <div className="mt-4">
           {order.basket.map((item, index) => (
             <BasketOrder order={item} key={index} />
           ))}
         </div>
+      </div>
+      <div className="mt-8">
+        <button
+          onClick={handleReadyToPick}
+          className="border border-gray-300 px-4 py-2 rounded-md bg-slate-500 text-white shadow-md hover:bg-slate-400 hover:text-black"
+        >
+          Terminado
+        </button>
       </div>
     </div>
   );

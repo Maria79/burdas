@@ -26,7 +26,7 @@ const OrdersSchema = new mongoose.Schema(
     status: {
       received: {
         type: Boolean,
-        default: true, // This ensures Mongoose sets it to false if omitted
+        default: true, // This ensures Mongoose sets it to true if omitted
       },
       inProgress: {
         type: Boolean,
