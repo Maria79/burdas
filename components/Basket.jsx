@@ -1,7 +1,7 @@
 "use client";
 
 import { useBasket } from "@/context/BasketContext";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FaShoppingBasket } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -12,11 +12,12 @@ const Basket = () => {
   const { basket, clearBasket, removeFromBasket } = useBasket();
   const router = useRouter();
   const { data: session } = useSession();
+  const basketRef = useRef(null);
 
   const toggleBasket = () => setOpenBasket((prev) => !prev);
 
   const handleAction = (action) => {
-    if (action === "cancel") setOpenBasket(!openBasket);
+    if (action === "cancel") setOpenBasket(false);
     if (action === "pay") router.push(`/usuario/${session.user.id}/pagar`);
     setOpenBasket(false);
   };
@@ -36,6 +37,20 @@ const Basket = () => {
     return total + itemTotal;
   }, 0);
 
+  // Close the basket when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (basketRef.current && !basketRef.current.contains(event.target)) {
+        setOpenBasket(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <>
       <div className="">
@@ -45,8 +60,11 @@ const Basket = () => {
           className="cursor-pointer"
         />
       </div>
-      {openBasket && basket.length != 0 && (
-        <div className="absolute w-[360px] md:w-[460px] -right-16 md:-right-6 top-[40px] px-4 py-6 bg-white text-gray-800 border border-gray-300 rounded-lg shadow-lg z-50">
+      {openBasket && basket.length !== 0 && (
+        <div
+          ref={basketRef} // Attach the ref to the basket container
+          className="absolute w-[360px] md:w-[460px] -right-16 md:-right-6 top-[40px] px-4 py-6 bg-white text-gray-800 border border-gray-300 rounded-lg shadow-lg z-50"
+        >
           <h2 className="text-lg font-bold text-[#760e0d] border-b border-gray-200 pb-2 mb-4">
             Tu pedido
           </h2>

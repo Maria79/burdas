@@ -25,20 +25,23 @@ const OrdersCards = ({ initialOrders }) => {
     }
   };
 
-  // Poll the server every  ...
+  // Fetch orders on mount and poll during specified hours
   useEffect(() => {
-    // Function to check if the current time is between 18:00 and 00:00
     const isWithinPollingHours = () => {
       const now = new Date();
       const currentHour = now.getHours();
       return currentHour >= 18 && currentHour < 24; // Between 18:00 and 00:00
     };
 
+    // Fetch orders initially
+    fetchOrders();
+
+    // Poll the server every 5 seconds during the specified hours
     const interval = setInterval(() => {
       if (isWithinPollingHours()) {
-        fetchOrders(); // Fetch orders only if within polling hours
+        fetchOrders();
       }
-    }, 5000); // seconds
+    }, 5000);
 
     // Cleanup on component unmount
     return () => clearInterval(interval);
