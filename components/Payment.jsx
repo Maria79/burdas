@@ -54,7 +54,7 @@ const Payment = () => {
   const isWithinActiveHours = () => {
     const now = new Date();
     const currentHour = now.getHours();
-    return currentHour >= 18 && currentHour < 23; // Between 18:00 and 23:00
+    return currentHour >= 18 && currentHour < 24; // Between 18:00 and 23:00
   };
 
   // Handle cancel action
