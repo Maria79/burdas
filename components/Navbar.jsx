@@ -85,13 +85,13 @@ const Navbar = ({ dishes }) => {
         )}
 
         {/* Profile and Basket */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-6">
           {session ? (
             <>
               <div className="relative">
                 <Basket dishes={dishes} resetCounts={clearBasket} />
                 {basket.length > 0 && (
-                  <div className="absolute -top-2 -right-2 bg-black text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                  <div className="absolute -top-2 -right-2 bg-black text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">
                     {basket.reduce((sum, item) => sum + item.count, 0)}
                   </div>
                 )}
@@ -134,7 +134,7 @@ const Navbar = ({ dishes }) => {
               <div className="relative">
                 <Basket dishes={dishes} resetCounts={clearBasket} />
                 {basket.length > 0 && (
-                  <div className="absolute -top-2 -right-2 bg-black text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                  <div className="absolute -top-2 -right-2 bg-black text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">
                     {basket.reduce((sum, item) => sum + item.count, 0)}
                   </div>
                 )}

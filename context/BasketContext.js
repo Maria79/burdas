@@ -1,6 +1,6 @@
 "use client";
-
 import { createContext, useContext, useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
 const extrasList = [
   { name: "Queso Asado", price: 2.0 },
@@ -18,25 +18,32 @@ const BasketContext = createContext();
 export const BasketProvider = ({ children }) => {
   const [basket, setBasket] = useState([]);
   const [counts, setCounts] = useState({});
+  const { data: session } = useSession();
 
-  // Helper function to sync with localStorage
-  const syncLocalStorage = (key, value) => {
-    localStorage.setItem(key, JSON.stringify(value));
+  // Helper function to get the storage key for the current user
+  const getStorageKey = () => {
+    const userId = session?.user?.id || "guest";
+    return `basket-${userId}`;
   };
 
-  // Rehydrate basket and counts from localStorage
+  // // Helper function to sync with localStorage
+  // const syncLocalStorage = (key, value) => {
+  //   localStorage.setItem(key, JSON.stringify(value));
+  // };
+
+  // Rehydrate basket and counts from localStorage for the current user
   useEffect(() => {
-    const savedBasket = localStorage.getItem("basket");
-    const savedCounts = localStorage.getItem("counts");
+    const savedBasket = localStorage.getItem(getStorageKey());
+    const savedCounts = localStorage.getItem(`${getStorageKey()}-counts`);
     if (savedBasket) setBasket(JSON.parse(savedBasket));
     if (savedCounts) setCounts(JSON.parse(savedCounts));
-  }, []);
+  }, [session]); // Reload when the user changes
 
-  // Sync basket and counts to localStorage
+  // Sync basket and counts to localStorage for the current user
   useEffect(() => {
-    syncLocalStorage("basket", basket);
-    syncLocalStorage("counts", counts);
-  }, [basket, counts]);
+    localStorage.setItem(getStorageKey(), JSON.stringify(basket));
+    localStorage.setItem(`${getStorageKey()}-counts`, JSON.stringify(counts));
+  }, [basket, counts, session]);
 
   // Add or update item in the basket with extras
   const addToBasket = (item, extras = []) => {

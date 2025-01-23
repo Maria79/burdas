@@ -61,7 +61,6 @@ const Payment = () => {
   const handleCancel = () => {
     router.back(); // Navigate back to the previous page
   };
-  console.log(basket);
 
   return (
     <div className="w-full max-w-md mx-auto bg-gray-100 mt-16 rounded-lg shadow-md">

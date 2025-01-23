@@ -15,7 +15,7 @@ export const fetchOrders = async (idParams) => {
   }
 };
 
-const UserPage = async ({ params }) => {
+const UserHistory = async ({ params }) => {
   const session = await getServerSession(authOptions);
 
   if (!session || !session.user?.id) {
@@ -52,4 +52,4 @@ const UserPage = async ({ params }) => {
   return <BasketWrapper userOrders={userOrders} />;
 };
 
-export default UserPage;
+export default UserHistory;
