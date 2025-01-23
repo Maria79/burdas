@@ -4,48 +4,69 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/utils/authOptions"; // Update with the path to your NextAuth options file
 
 export const POST = async (req) => {
-  await connectDB(); // Ensure MongoDB is connected
-
   try {
-    // Fetch the user session
+    await connectDB();
     const session = await getServerSession(authOptions);
 
     if (!session || !session.user || !session.user.id) {
-      console.error("Session not found or invalid:", session);
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
       });
     }
 
-    const { basket, paymentMethod, totalPrice } = await req.json(); // Parse the request body
+    const { basket, paymentMethod, totalPrice } = await req.json();
 
-    if (!basket || !paymentMethod) {
-      console.error("Invalid payload:", { basket, paymentMethod });
+    if (!basket || !Array.isArray(basket) || basket.length === 0) {
       return new Response(
-        JSON.stringify({ error: "Basket or payment method is missing" }),
+        JSON.stringify({ error: "Invalid or missing basket" }),
         { status: 400 }
       );
     }
 
-    // Create a new order document
+    // Validate each basket item
+    for (const item of basket) {
+      if (!item._id || !item.name || !item.type || !item.price || !item.count) {
+        return new Response(
+          JSON.stringify({
+            error: `Invalid basket item: ${JSON.stringify(item)}`,
+          }),
+          { status: 400 }
+        );
+      }
+      if (item.extras) {
+        for (const extra of item.extras) {
+          if (!extra.name || !extra.price) {
+            return new Response(
+              JSON.stringify({
+                error: `Invalid extra in basket item: ${JSON.stringify(extra)}`,
+              }),
+              { status: 400 }
+            );
+          }
+        }
+      }
+    }
+
     const newOrder = new Orders({
-      userId: session.user.id, // User ID from the session
+      userId: session.user.id,
       basket,
       paymentMethod,
       totalPrice,
       status: {
-        received: true, // Explicitly set the value for debugging
-        inProgress: false, // Explicitly set the value for debugging
-        readyToPick: false, // Explicitly set the value for debugging
-        done: false, // Explicitly set the value for debugging
+        received: true,
+        inProgress: false,
+        readyToPick: false,
+        done: false,
       },
     });
 
-    // Save the order to the database
-    await newOrder.save();
+    const savedOrder = await newOrder.save();
 
     return new Response(
-      JSON.stringify({ message: "Order created successfully" }),
+      JSON.stringify({
+        message: "Order created successfully",
+        order: savedOrder,
+      }),
       { status: 201 }
     );
   } catch (error) {

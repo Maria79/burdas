@@ -5,50 +5,38 @@ const OrdersSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // Reference to the User model
+      ref: "User",
       required: true,
     },
     basket: [
       {
-        _id: { type: mongoose.Schema.Types.ObjectId, required: true }, // Item ID
-        name: { type: String, required: true }, // Item name
-        type: { type: String, required: true }, // Item type/category
-        extra: {
-          name: { type: String, required: true },
-          price: { type: String, required: true },
-        },
-        count: { type: Number, required: true }, // Quantity of the item
-        price: { type: String, required: true }, // Price of the item
+        _id: { type: mongoose.Schema.Types.ObjectId, required: true },
+        name: { type: String, required: true },
+        type: { type: String, required: true },
+        extras: [
+          {
+            name: { type: String, required: true },
+            price: { type: String, required: true },
+          },
+        ], // Ensure it's an array of extras
+        count: { type: Number, required: true },
+        price: { type: String, required: true },
       },
     ],
     paymentMethod: {
       type: String,
-      enum: ["onStore", "creditCard"], // Enum for valid payment methods
+      enum: ["onStore", "creditCard"],
       required: true,
     },
     totalPrice: { type: String, required: true },
     status: {
-      received: {
-        type: Boolean,
-        default: true, // This ensures Mongoose sets it to true if omitted
-      },
-      inProgress: {
-        type: Boolean,
-        default: false, // This ensures Mongoose sets it to false if omitted
-      },
-      readyToPick: {
-        type: Boolean,
-        default: false, // This ensures Mongoose sets it to false if omitted
-      },
-      done: {
-        type: Boolean,
-        default: false, // This ensures Mongoose sets it to false if omitted
-      },
+      received: { type: Boolean, default: true },
+      inProgress: { type: Boolean, default: false },
+      readyToPick: { type: Boolean, default: false },
+      done: { type: Boolean, default: false },
     },
   },
-  {
-    timestamps: true, // Automatically add createdAt and updatedAt fields
-  }
+  { timestamps: true }
 );
 
 // Export the model
