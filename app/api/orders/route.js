@@ -11,6 +11,7 @@ export const POST = async (req) => {
     const session = await getServerSession(authOptions);
 
     if (!session || !session.user || !session.user.id) {
+      console.error("Session not found or invalid:", session);
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
       });
@@ -19,6 +20,7 @@ export const POST = async (req) => {
     const { basket, paymentMethod, totalPrice } = await req.json(); // Parse the request body
 
     if (!basket || !paymentMethod) {
+      console.error("Invalid payload:", { basket, paymentMethod });
       return new Response(
         JSON.stringify({ error: "Basket or payment method is missing" }),
         { status: 400 }
@@ -47,7 +49,7 @@ export const POST = async (req) => {
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error saving order:", error);
+    console.error("Error in POST handler:", error);
     return new Response(JSON.stringify({ error: "Internal Server Error" }), {
       status: 500,
     });
