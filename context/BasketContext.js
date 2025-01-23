@@ -2,6 +2,17 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 
+const extrasList = [
+  { name: "Queso Asado", price: 2.0 },
+  { name: "Queso Cheddar", price: 1.2 },
+  { name: "Aguacate", price: 1.5 },
+  { name: "Plátano Frito", price: 1.5 },
+  { name: "Bacón", price: 1.2 },
+  { name: "Pollo Crispy", price: 2.0 },
+  { name: "Ensalada de Col Dulce", price: 1.6 },
+  { name: "Postres", price: 1.6 },
+];
+
 const BasketContext = createContext();
 
 export const BasketProvider = ({ children }) => {
@@ -27,24 +38,72 @@ export const BasketProvider = ({ children }) => {
     syncLocalStorage("counts", counts);
   }, [basket, counts]);
 
-  // Add or update item in the basket
-  const addToBasket = (item) => {
+  // Add or update item in the basket with extras
+  const addToBasket = (item, extras = []) => {
     if (!item || !item._id) return;
 
     setBasket((prevBasket) => {
-      const existingItem = prevBasket.find((i) => i._id === item._id);
-      if (existingItem) {
-        return prevBasket.map((i) =>
-          i._id === item._id ? { ...i, count: i.count + item.count } : i
-        );
+      const existingItemIndex = prevBasket.findIndex((i) => i._id === item._id);
+
+      if (existingItemIndex !== -1) {
+        // Update existing item by adding extras
+        const updatedBasket = [...prevBasket];
+        const existingItem = updatedBasket[existingItemIndex];
+        updatedBasket[existingItemIndex] = {
+          ...existingItem,
+          count: existingItem.count + item.count,
+          extras: mergeExtras(existingItem.extras, extras),
+        };
+        return updatedBasket;
       }
-      return [...prevBasket, item];
+
+      // Add new item with extras
+      return [...prevBasket, { ...item, extras }];
     });
 
     setCounts((prevCounts) => ({
       ...prevCounts,
       [item._id]: (prevCounts[item._id] || 0) + item.count,
     }));
+  };
+
+  const mergeExtras = (existingExtras = [], newExtras = []) => {
+    const extrasMap = new Map();
+    [...existingExtras, ...newExtras].forEach((extra) => {
+      if (extrasMap.has(extra.name)) {
+        extrasMap.set(extra.name, {
+          name: extra.name,
+          price: extra.price,
+        });
+      } else {
+        extrasMap.set(extra.name, extra);
+      }
+    });
+    return Array.from(extrasMap.values());
+  };
+
+  const addExtrasToItem = (itemId, selectedExtras) => {
+    setBasket((prevBasket) =>
+      prevBasket.map((item) => {
+        if (item._id === itemId) {
+          const extrasPrice = selectedExtras.reduce((sum, extraName) => {
+            const extra = extrasList.find((e) => e.name === extraName);
+            return sum + (extra ? extra.price : 0);
+          }, 0);
+
+          const updatedPrice = (
+            Number(item.price.replace(",", ".")) + extrasPrice
+          ).toFixed(2);
+
+          return {
+            ...item,
+            extras: selectedExtras,
+            updatedPrice, // Save the updated price
+          };
+        }
+        return item;
+      })
+    );
   };
 
   const removeFromBasket = (_id) => {
@@ -92,7 +151,13 @@ export const BasketProvider = ({ children }) => {
   // Get total price of items in the basket
   const getTotalPrice = () =>
     basket.reduce((total, item) => {
-      const itemTotal = item.count * Number(item.price?.replace(",", ".") || 0);
+      const itemExtrasPrice = (item.extras || []).reduce(
+        (sum, extra) => sum + extra.price,
+        0
+      );
+      const itemTotal =
+        item.count *
+        (Number(item.price?.replace(",", ".") || 0) + itemExtrasPrice);
       return total + itemTotal;
     }, 0);
 
@@ -107,6 +172,7 @@ export const BasketProvider = ({ children }) => {
         clearBasket,
         getTotalCount,
         getTotalPrice,
+        addExtrasToItem, // Added function
       }}
     >
       {children}

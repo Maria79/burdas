@@ -43,7 +43,7 @@ const BasketWrapper = ({ userOrders }) => {
   return (
     <div className="py-8 px-4 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold mb-6 text-center">
-        Your Grouped Order History
+        TÚS PEDIDOS ANTERIORES
       </h1>
       <div className="space-y-6">
         {groupedOrders.map((group, groupIndex) => (
@@ -52,7 +52,7 @@ const BasketWrapper = ({ userOrders }) => {
             className="border border-gray-300 px-4 py-6 rounded-md shadow-md bg-white"
           >
             <div>
-              <h2 className="font-semibold text-lg mb-2">Order Group:</h2>
+              <h2 className="font-semibold text-lg mb-2">Pedido:</h2>
               <div className="space-y-4">
                 {group[0].basket.map((item, index) => (
                   <div key={index} className="px-3 rounded-md shadow-sm">
@@ -69,7 +69,7 @@ const BasketWrapper = ({ userOrders }) => {
             </div>
             <div className="mt-4">
               <p className="text-sm font-semibold">
-                Total Price: <span>€{group[0].totalPrice}</span>
+                Precio Total: <span>€{group[0].totalPrice}</span>
               </p>
             </div>
             <div className="text-right mt-4">

@@ -13,6 +13,10 @@ const OrdersSchema = new mongoose.Schema(
         _id: { type: mongoose.Schema.Types.ObjectId, required: true }, // Item ID
         name: { type: String, required: true }, // Item name
         type: { type: String, required: true }, // Item type/category
+        extra: {
+          name: { type: String, required: true },
+          price: { type: String, required: true },
+        },
         count: { type: Number, required: true }, // Quantity of the item
         price: { type: String, required: true }, // Price of the item
       },

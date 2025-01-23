@@ -48,7 +48,7 @@ const AdminLayout = ({ children }) => {
 
   if (loading) {
     return (
-      <html lang="en">
+      <html lang="es">
         <body className="h-screen flex items-center justify-center bg-gray-50">
           <div className="text-gray-500 text-lg">Loading...</div>
         </body>
@@ -57,7 +57,7 @@ const AdminLayout = ({ children }) => {
   }
 
   return (
-    <html lang="en">
+    <html lang="es">
       <body className="min-h-screen w-full bg-gray-50">
         {!isAuthenticated && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">

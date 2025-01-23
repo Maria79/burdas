@@ -48,18 +48,18 @@ const FinishedOrdersCards = ({ initialOrders }) => {
 
   const now = new Date();
   const latestOrders = filteredOrders.filter((order) => {
-    const createdAt = new Date(order.createdAt);
-    const diffInMinutes = (now - createdAt) / (1000 * 60);
+    const updatedAt = new Date(order.updatedAt);
+    const diffInMinutes = (now - updatedAt) / (1000 * 60);
     return diffInMinutes <= 10;
   });
   const ordersBetween8And15Minutes = filteredOrders.filter((order) => {
-    const createdAt = new Date(order.createdAt);
-    const diffInMinutes = (now - createdAt) / (1000 * 60);
+    const updatedAt = new Date(order.updatedAt);
+    const diffInMinutes = (now - updatedAt) / (1000 * 60);
     return diffInMinutes > 8 && diffInMinutes <= 15;
   });
   const ordersBetween15And30Minutes = filteredOrders.filter((order) => {
-    const createdAt = new Date(order.createdAt);
-    const diffInMinutes = (now - createdAt) / (1000 * 60);
+    const updatedAt = new Date(order.updatedAt);
+    const diffInMinutes = (now - updatedAt) / (1000 * 60);
     return diffInMinutes > 15 && diffInMinutes <= 30;
   });
   const getBackgroundColor = (order) => {

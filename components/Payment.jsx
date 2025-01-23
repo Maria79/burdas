@@ -12,10 +12,10 @@ const Payment = () => {
   // Calculate total price
   const calculateTotalPrice = () => {
     return basket.reduce((total, item) => {
-      const itemTotal =
-        item.count && item.price
-          ? item.count * Number(item.price.replace(",", "."))
-          : 0;
+      const priceToUse = item.updatedPrice
+        ? Number(item.updatedPrice)
+        : Number(item.price.replace(",", "."));
+      const itemTotal = item.count ? item.count * priceToUse : 0;
       return total + itemTotal;
     }, 0);
   };
@@ -61,6 +61,7 @@ const Payment = () => {
   const handleCancel = () => {
     router.back(); // Navigate back to the previous page
   };
+  console.log(basket);
 
   return (
     <div className="w-full max-w-md mx-auto bg-gray-100 mt-16 rounded-lg shadow-md">
@@ -71,23 +72,43 @@ const Payment = () => {
             Pedido
           </h3>
           {basket.map((item) => (
-            <div
-              key={item._id}
-              className="flex justify-between items-center text-sm mb-2"
-            >
-              <span className="truncate">
-                - <span className="capitalize">{item.type}</span> _{" "}
-                <span className="capitalize font-medium">{item.name}</span>{" "}
-                {item.count > 1 && (
-                  <span className="text-gray-600">x{item.count}</span>
-                )}
-              </span>
-              <span className="font-semibold text-gray-700">
-                {new Intl.NumberFormat("de-DE", {
-                  style: "currency",
-                  currency: "EUR",
-                }).format(item.count * Number(item.price.replace(",", ".")))}
-              </span>
+            <div key={item._id}>
+              <div className="flex justify-between items-center text-sm mb-0.5">
+                <span className="truncate">
+                  - <span className="capitalize">{item.type}</span> _{" "}
+                  <span className="capitalize font-medium">{item.name}</span>{" "}
+                  {item.count > 1 && (
+                    <span className="text-gray-600">x{item.count}</span>
+                  )}
+                </span>
+                <span className="font-semibold text-gray-700">
+                  {new Intl.NumberFormat("de-DE", {
+                    style: "currency",
+                    currency: "EUR",
+                  }).format(
+                    item.count *
+                      (item.updatedPrice
+                        ? Number(item.updatedPrice)
+                        : Number(item.price.replace(",", ".")))
+                  )}
+                </span>
+              </div>
+              {/* Extras Info */}
+              {item.extras && item.extras.length > 0 && (
+                <div className="mb-2 pl-4 text-xs text-gray-600">
+                  <p className="font-light text-gray-700">
+                    Extras:{" "}
+                    <span>
+                      {item.extras.map((extraName, index) => (
+                        <span key={index} className="italic">
+                          {extraName}
+                          {index < item.extras.length - 1 && ", "}
+                        </span>
+                      ))}
+                    </span>
+                  </p>
+                </div>
+              )}
             </div>
           ))}
           <hr className="border-gray-300 my-4" />
