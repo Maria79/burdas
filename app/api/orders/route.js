@@ -4,54 +4,71 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/utils/authOptions"; // Update with the path to your NextAuth options file
 
 export const POST = async (req) => {
+  await connectDB(); // Ensure MongoDB is connected
+
   try {
-    await connectDB();
+    // Fetch the user session
     const session = await getServerSession(authOptions);
 
     if (!session || !session.user || !session.user.id) {
+      console.error("Session not found or invalid:", session);
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
       });
     }
 
-    const { basket, paymentMethod, totalPrice } = await req.json();
+    const { basket, paymentMethod, totalPrice } = await req.json(); // Parse the request body
 
-    if (!basket || !Array.isArray(basket) || basket.length === 0) {
+    // Validate payload
+    if (!basket || !paymentMethod) {
+      console.error("Invalid payload:", { basket, paymentMethod });
       return new Response(
-        JSON.stringify({ error: "Invalid or missing basket" }),
+        JSON.stringify({ error: "Basket or payment method is missing" }),
         { status: 400 }
       );
     }
 
-    // Validate each basket item
-    for (const item of basket) {
-      if (!item._id || !item.name || !item.type || !item.price || !item.count) {
-        return new Response(
-          JSON.stringify({
-            error: `Invalid basket item: ${JSON.stringify(item)}`,
-          }),
-          { status: 400 }
-        );
-      }
-      if (item.extras) {
-        for (const extra of item.extras) {
-          if (!extra.name || !extra.price) {
-            return new Response(
-              JSON.stringify({
-                error: `Invalid extra in basket item: ${JSON.stringify(extra)}`,
-              }),
-              { status: 400 }
-            );
-          }
-        }
-      }
-    }
+    // Validate and sanitize the basket
+    const extrasList = [
+      { name: "Queso Asado", price: 2.0 },
+      { name: "Queso Cheddar", price: 1.2 },
+      { name: "Aguacate", price: 1.5 },
+      { name: "Plátano Frito", price: 1.5 },
+      { name: "Bacón", price: 1.2 },
+      { name: "Pollo Crispy", price: 2.0 },
+      { name: "Ensalada de Col Dulce", price: 1.6 },
+      { name: "Postres", price: 1.6 },
+    ];
 
+    const sanitizedBasket = basket.map((item) => {
+      if (!item._id || !item.name || !item.type || !item.price || !item.count) {
+        throw new Error(`Invalid basket item: ${JSON.stringify(item)}`);
+      }
+
+      const sanitizedExtras = (item.extras || []).map((extraName) => {
+        const extra = extrasList.find((e) => e.name === extraName);
+        if (!extra) {
+          throw new Error(`Invalid extra in basket item: "${extraName}"`);
+        }
+        return { name: extra.name, price: extra.price };
+      });
+
+      return {
+        _id: item._id,
+        name: item.name,
+        type: item.type,
+        count: item.count,
+        price: parseFloat(item.price.replace(",", ".")),
+        extras: sanitizedExtras,
+      };
+    });
+
+    // Create a new order document
     const newOrder = new Orders({
       userId: session.user.id,
-      basket,
+      basket: sanitizedBasket,
       paymentMethod,
-      totalPrice,
+      totalPrice: parseFloat(totalPrice),
       status: {
         received: true,
         inProgress: false,
@@ -60,20 +77,19 @@ export const POST = async (req) => {
       },
     });
 
-    const savedOrder = await newOrder.save();
+    // Save the order to the database
+    await newOrder.save();
 
     return new Response(
-      JSON.stringify({
-        message: "Order created successfully",
-        order: savedOrder,
-      }),
+      JSON.stringify({ message: "Order created successfully" }),
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error in POST handler:", error);
-    return new Response(JSON.stringify({ error: "Internal Server Error" }), {
-      status: 500,
-    });
+    console.error("Error in POST handler:", error.message || error);
+    return new Response(
+      JSON.stringify({ error: error.message || "Internal Server Error" }),
+      { status: 500 }
+    );
   }
 };
 

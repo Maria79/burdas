@@ -54,7 +54,7 @@ const Payment = () => {
   const isWithinActiveHours = () => {
     const now = new Date();
     const currentHour = now.getHours();
-    return currentHour >= 18 && currentHour < 24; // Between 18:00 and 23:00
+    return currentHour >= 18 && currentHour < 24; // Between 18:00 and 24:00
   };
 
   // Handle cancel action
@@ -236,7 +236,7 @@ const Payment = () => {
                 ? "bg-green-500 text-white hover:bg-green-400"
                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
             }`}
-            disabled={!isWithinActiveHours()}
+            // disabled={!isWithinActiveHours()}
           >
             {selectedOption === "onStore" ? "Enviar" : "Pagar"}
           </button>
