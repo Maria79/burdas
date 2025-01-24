@@ -16,7 +16,6 @@ const OrdersSchema = new mongoose.Schema(
         extras: [
           {
             name: { type: String },
-            price: { type: String },
           },
         ], // Ensure it's an array of extras
         count: { type: Number, required: true },

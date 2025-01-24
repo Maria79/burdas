@@ -33,16 +33,18 @@ export const BasketProvider = ({ children }) => {
 
   // Rehydrate basket and counts from localStorage for the current user
   useEffect(() => {
-    const savedBasket = localStorage.getItem(getStorageKey());
-    const savedCounts = localStorage.getItem(`${getStorageKey()}-counts`);
+    const userId = session?.user?.id || "guest";
+    const savedBasket = localStorage.getItem(`basket-${userId}`);
+    const savedCounts = localStorage.getItem(`basket-${userId}-counts`);
+
     if (savedBasket) setBasket(JSON.parse(savedBasket));
     if (savedCounts) setCounts(JSON.parse(savedCounts));
-  }, [session]); // Reload when the user changes
+  }, [session]);
 
-  // Sync basket and counts to localStorage for the current user
   useEffect(() => {
-    localStorage.setItem(getStorageKey(), JSON.stringify(basket));
-    localStorage.setItem(`${getStorageKey()}-counts`, JSON.stringify(counts));
+    const userId = session?.user?.id || "guest";
+    localStorage.setItem(`basket-${userId}`, JSON.stringify(basket));
+    localStorage.setItem(`basket-${userId}-counts`, JSON.stringify(counts));
   }, [basket, counts, session]);
 
   // Add or update item in the basket with extras

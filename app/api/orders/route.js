@@ -19,58 +19,44 @@ export const POST = async (req) => {
 
     const { basket, paymentMethod, totalPrice } = await req.json(); // Parse the request body
 
-    // Validate payload
-    if (!basket || !paymentMethod) {
-      console.error("Invalid payload:", { basket, paymentMethod });
+    if (!basket || !paymentMethod || !totalPrice) {
+      console.error("Invalid payload:", { basket, paymentMethod, totalPrice });
       return new Response(
-        JSON.stringify({ error: "Basket or payment method is missing" }),
+        JSON.stringify({
+          error: "Basket, payment method, or total price is missing",
+        }),
         { status: 400 }
       );
     }
 
-    // Validate and sanitize the basket
-    const extrasList = [
-      { name: "Queso Asado", price: 2.0 },
-      { name: "Queso Cheddar", price: 1.2 },
-      { name: "Aguacate", price: 1.5 },
-      { name: "Plátano Frito", price: 1.5 },
-      { name: "Bacón", price: 1.2 },
-      { name: "Pollo Crispy", price: 2.0 },
-      { name: "Ensalada de Col Dulce", price: 1.6 },
-      { name: "Postres", price: 1.6 },
-    ];
-
-    const sanitizedBasket = basket.map((item) => {
-      if (!item._id || !item.name || !item.type || !item.price || !item.count) {
-        throw new Error(`Invalid basket item: ${JSON.stringify(item)}`);
-      }
-
-      const sanitizedExtras = (item.extras || []).map((extraName) => {
-        const extra = extrasList.find((e) => e.name === extraName);
-        if (!extra) {
-          throw new Error(`Invalid extra in basket item: "${extraName}"`);
+    // Validate and sanitize extras
+    const sanitizedBasket = basket.map((item) => ({
+      ...item,
+      extras: (item.extras || []).map((extra) => {
+        if (!extra.name) {
+          throw new Error(`Invalid extra in basket item: ${item.name}`);
         }
-        return { name: extra.name, price: extra.price };
-      });
+        return { name: extra.name }; // Only keep the `name` field
+      }),
+    }));
 
-      return {
-        _id: item._id,
-        name: item.name,
-        type: item.type,
-        count: item.count,
-        price: parseFloat(item.price.replace(",", ".")),
-        extras: sanitizedExtras,
-      };
-    });
+    // Sanitize the total price
+    const sanitizedTotalPrice = parseFloat(totalPrice.replace(",", "."));
+    if (isNaN(sanitizedTotalPrice)) {
+      console.error("Invalid totalPrice:", totalPrice);
+      return new Response(JSON.stringify({ error: "Invalid totalPrice" }), {
+        status: 400,
+      });
+    }
 
     // Create a new order document
     const newOrder = new Orders({
-      userId: session.user.id,
+      userId: session.user.id, // User ID from the session
       basket: sanitizedBasket,
       paymentMethod,
-      totalPrice: parseFloat(totalPrice),
+      totalPrice: sanitizedTotalPrice.toFixed(2),
       status: {
-        received: true,
+        received: true, // Explicitly set the value for debugging
         inProgress: false,
         readyToPick: false,
         done: false,
@@ -85,11 +71,10 @@ export const POST = async (req) => {
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error in POST handler:", error.message || error);
-    return new Response(
-      JSON.stringify({ error: error.message || "Internal Server Error" }),
-      { status: 500 }
-    );
+    console.error("Error in POST handler:", error);
+    return new Response(JSON.stringify({ error: "Internal Server Error" }), {
+      status: 500,
+    });
   }
 };
 

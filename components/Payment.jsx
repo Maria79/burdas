@@ -3,6 +3,7 @@
 import { useBasket } from "@/context/BasketContext";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { extrasList } from "@/utils/extras";
 
 const Payment = () => {
   const [selectedOption, setSelectedOption] = useState("onStore");
@@ -13,8 +14,8 @@ const Payment = () => {
   const calculateTotalPrice = () => {
     return basket.reduce((total, item) => {
       const priceToUse = item.updatedPrice
-        ? Number(item.updatedPrice)
-        : Number(item.price.replace(",", "."));
+        ? parseFloat(item.updatedPrice)
+        : parseFloat(item.price.replace(",", "."));
       const itemTotal = item.count ? item.count * priceToUse : 0;
       return total + itemTotal;
     }, 0);
@@ -27,14 +28,21 @@ const Payment = () => {
 
   // Handle order submission
   const handleSendOrder = async () => {
+    const structuredBasket = basket.map((item) => ({
+      ...item,
+      extras: (item.extras || []).map((extraName) => {
+        return { name: extraName }; // Map extras to an array of objects with `name`
+      }),
+    }));
+
     try {
       const response = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          basket,
+          basket: structuredBasket,
           paymentMethod: selectedOption,
-          totalPrice,
+          totalPrice: calculateTotalPrice().toFixed(2),
         }),
       });
 
@@ -57,13 +65,12 @@ const Payment = () => {
     return currentHour >= 18 && currentHour < 24; // Between 18:00 and 24:00
   };
 
-  // Handle cancel action
   const handleCancel = () => {
     router.back(); // Navigate back to the previous page
   };
 
   return (
-    <div className="w-full max-w-md mx-auto bg-gray-100 mt-16 rounded-lg shadow-md">
+    <div className="w-full max-w-md mx-auto bg-white mt-16 rounded-lg shadow-md border border-gray-200">
       <form className="py-8 px-8 space-y-6">
         {/* Basket Details */}
         <div className="mb-6">
@@ -71,8 +78,8 @@ const Payment = () => {
             Pedido
           </h3>
           {basket.map((item) => (
-            <div key={item._id}>
-              <div className="flex justify-between items-center text-sm mb-0.5">
+            <div key={item._id} className="mb-4">
+              <div className="flex justify-between items-center text-sm">
                 <span className="truncate">
                   - <span className="capitalize">{item.type}</span> _{" "}
                   <span className="capitalize font-medium">{item.name}</span>{" "}
@@ -87,14 +94,13 @@ const Payment = () => {
                   }).format(
                     item.count *
                       (item.updatedPrice
-                        ? Number(item.updatedPrice)
-                        : Number(item.price.replace(",", ".")))
+                        ? parseFloat(item.updatedPrice)
+                        : parseFloat(item.price.replace(",", ".")))
                   )}
                 </span>
               </div>
-              {/* Extras Info */}
               {item.extras && item.extras.length > 0 && (
-                <div className="mb-2 pl-4 text-xs text-gray-600">
+                <div className="mt-2 pl-4 text-sm text-gray-600">
                   <p className="font-light text-gray-700">
                     Extras:{" "}
                     <span>
@@ -152,86 +158,18 @@ const Payment = () => {
           </div>
         </div>
 
-        {/* Credit Card Details */}
-        {selectedOption === "creditCard" && (
-          <div className="space-y-4">
-            <div className="flex flex-col">
-              <label
-                htmlFor="nameCard"
-                className="text-sm font-medium text-gray-700"
-              >
-                Nombre en tarjeta
-              </label>
-              <input
-                className="p-2 border border-gray-300 rounded-md"
-                type="text"
-                id="nameCard"
-              />
-            </div>
-            <div className="flex flex-col">
-              <label
-                htmlFor="cardNumber"
-                className="text-sm font-medium text-gray-700"
-              >
-                Número de tarjeta
-              </label>
-              <input
-                className="p-2 border border-gray-300 rounded-md"
-                type="number"
-                id="cardNumber"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col">
-                <label className="text-sm font-medium text-gray-700">
-                  Fecha de expiración
-                </label>
-                <input
-                  className="p-2 border border-gray-300 rounded-md"
-                  type="text"
-                  placeholder="MM / YY"
-                />
-              </div>
-              <div className="flex flex-col">
-                <label className="text-sm font-medium text-gray-700">
-                  Código de seguridad
-                </label>
-                <input
-                  className="p-2 border border-gray-300 rounded-md"
-                  type="text"
-                  placeholder="CVC"
-                />
-              </div>
-            </div>
-            <div className="flex flex-col">
-              <label
-                htmlFor="country"
-                className="text-sm font-medium text-gray-700"
-              >
-                País
-              </label>
-              <input
-                className="p-2 border border-gray-300 rounded-md"
-                type="text"
-                id="country"
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Submit and Cancel Buttons */}
-        <div className="flex justify-between space-x-4">
+        <div className="flex justify-between space-x-4 mt-4">
           <button
             type="button"
             onClick={handleCancel}
-            className="px-8 py-2 text-lg font-medium rounded-md shadow-md bg-gray-300 text-gray-700 hover:bg-gray-400"
+            className="px-6 py-2 text-lg font-medium rounded-md shadow-md bg-gray-200 text-gray-700 hover:bg-gray-300"
           >
             Cancelar
           </button>
           <button
             type="button"
             onClick={handleSendOrder}
-            className={`px-8 py-2 text-lg font-medium rounded-md shadow-md transition-all ${
+            className={`px-6 py-2 text-lg font-medium rounded-md shadow-md transition-all ${
               isWithinActiveHours()
                 ? "bg-green-500 text-white hover:bg-green-400"
                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
