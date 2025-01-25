@@ -30,6 +30,9 @@ const InProgressCards = ({ initialOrders }) => {
       return currentHour >= 18 && currentHour < 24; // Between 18:00 and 00:00
     };
 
+    // Fetch orders initially
+    fetchOrders();
+
     const interval = setInterval(() => {
       if (isWithinPollingHours()) {
         fetchOrders(); // Fetch orders only if within polling hours
