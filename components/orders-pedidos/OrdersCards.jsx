@@ -78,7 +78,7 @@ const OrdersCards = ({ initialOrders }) => {
 
   return (
     <div className="py-8 ">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 gap-2">
         {filteredOrders.map((order) => (
           <OrderCard
             key={order._id}

@@ -48,31 +48,46 @@ export const BasketProvider = ({ children }) => {
   }, [basket, counts, session]);
 
   // Add or update item in the basket with extras
+  // const addToBasket = (item, extras = []) => {
+  //   if (!item || !item._id) return;
+
+  //   setBasket((prevBasket) => {
+  //     const existingItemIndex = prevBasket.findIndex((i) => i._id === item._id);
+
+  //     if (existingItemIndex !== -1) {
+  //       // Update existing item by adding extras
+  //       const updatedBasket = [...prevBasket];
+  //       const existingItem = updatedBasket[existingItemIndex];
+  //       updatedBasket[existingItemIndex] = {
+  //         ...existingItem,
+  //         count: existingItem.count + item.count,
+  //         extras: mergeExtras(existingItem.extras, extras),
+  //       };
+  //       return updatedBasket;
+  //     }
+
+  //     // Add new item with extras
+  //     return [...prevBasket, { ...item, extras }];
+  //   });
+
+  //   setCounts((prevCounts) => ({
+  //     ...prevCounts,
+  //     [item._id]: (prevCounts[item._id] || 0) + item.count,
+  //   }));
+  // };
+
   const addToBasket = (item, extras = []) => {
     if (!item || !item._id) return;
 
-    setBasket((prevBasket) => {
-      const existingItemIndex = prevBasket.findIndex((i) => i._id === item._id);
+    setBasket((prevBasket) => [
+      ...prevBasket,
+      { ...item, extras, count: item.count || 1 }, // Add a new item
+    ]);
 
-      if (existingItemIndex !== -1) {
-        // Update existing item by adding extras
-        const updatedBasket = [...prevBasket];
-        const existingItem = updatedBasket[existingItemIndex];
-        updatedBasket[existingItemIndex] = {
-          ...existingItem,
-          count: existingItem.count + item.count,
-          extras: mergeExtras(existingItem.extras, extras),
-        };
-        return updatedBasket;
-      }
-
-      // Add new item with extras
-      return [...prevBasket, { ...item, extras }];
-    });
-
+    // Update counts for tracking purposes
     setCounts((prevCounts) => ({
       ...prevCounts,
-      [item._id]: (prevCounts[item._id] || 0) + item.count,
+      [item._id]: (prevCounts[item._id] || 0) + (item.count || 1),
     }));
   };
 
@@ -92,37 +107,57 @@ export const BasketProvider = ({ children }) => {
   };
 
   const addExtrasToItem = (itemId, selectedExtras) => {
-    setBasket((prevBasket) =>
-      prevBasket.map((item) => {
-        if (item._id === itemId) {
-          const extrasPrice = selectedExtras.reduce((sum, extraName) => {
-            const extra = extrasList.find((e) => e.name === extraName);
-            return sum + (extra ? extra.price : 0);
-          }, 0);
+    setBasket((prevBasket) => {
+      // Find the first item matching the given itemId
+      const itemIndex = prevBasket.findIndex((item) => item._id === itemId);
 
-          const updatedPrice = (
+      if (itemIndex !== -1) {
+        // Copy the current basket
+        const updatedBasket = [...prevBasket];
+        const item = updatedBasket[itemIndex];
+
+        // Calculate the total price of the selected extras
+        const extrasPrice = selectedExtras.reduce((sum, extraName) => {
+          const extra = extrasList.find((e) => e.name === extraName);
+          return sum + (extra ? extra.price : 0);
+        }, 0);
+
+        // Update the item's extras and price
+        const updatedItem = {
+          ...item,
+          extras: selectedExtras,
+          updatedPrice: (
             Number(item.price.replace(",", ".")) + extrasPrice
-          ).toFixed(2);
+          ).toFixed(2),
+        };
 
-          return {
-            ...item,
-            extras: selectedExtras,
-            updatedPrice, // Save the updated price
-          };
-        }
-        return item;
-      })
-    );
+        // Replace the specific item in the basket
+        updatedBasket[itemIndex] = updatedItem;
+
+        return updatedBasket;
+      }
+
+      return prevBasket; // Return the basket unchanged if itemId is not found
+    });
   };
 
   const removeFromBasket = (_id) => {
     if (!_id) return;
 
-    setBasket((prevBasket) => prevBasket.filter((item) => item._id !== _id));
+    setBasket((prevBasket) => {
+      const indexToRemove = prevBasket.findIndex((item) => item._id === _id);
+      if (indexToRemove !== -1) {
+        return prevBasket.filter((_, index) => index !== indexToRemove);
+      }
+      return prevBasket;
+    });
 
     setCounts((prevCounts) => {
       const updatedCounts = { ...prevCounts };
-      delete updatedCounts[_id];
+      if (updatedCounts[_id]) {
+        updatedCounts[_id] -= 1;
+        if (updatedCounts[_id] <= 0) delete updatedCounts[_id];
+      }
       return updatedCounts;
     });
   };
@@ -131,18 +166,32 @@ export const BasketProvider = ({ children }) => {
   const decrementFromBasket = (_id) => {
     if (!_id) return;
 
-    setBasket((prevBasket) =>
-      prevBasket
-        .map((item) =>
-          item._id === _id ? { ...item, count: item.count - 1 } : item
-        )
-        .filter((item) => item.count > 0)
-    );
+    setBasket((prevBasket) => {
+      const indexToDecrement = prevBasket.findIndex((item) => item._id === _id);
+
+      if (indexToDecrement !== -1) {
+        const updatedBasket = [...prevBasket];
+        const item = updatedBasket[indexToDecrement];
+
+        // Decrease count
+        if (item.count > 1) {
+          updatedBasket[indexToDecrement] = { ...item, count: item.count - 1 };
+        } else {
+          // Remove item entirely if count is 1
+          updatedBasket.splice(indexToDecrement, 1);
+        }
+
+        return updatedBasket;
+      }
+      return prevBasket;
+    });
 
     setCounts((prevCounts) => {
       const updatedCounts = { ...prevCounts };
-      if (updatedCounts[_id]) updatedCounts[_id] -= 1;
-      if (updatedCounts[_id] <= 0) delete updatedCounts[_id];
+      if (updatedCounts[_id]) {
+        updatedCounts[_id] -= 1;
+        if (updatedCounts[_id] <= 0) delete updatedCounts[_id];
+      }
       return updatedCounts;
     });
   };

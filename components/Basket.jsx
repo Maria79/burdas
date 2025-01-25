@@ -51,9 +51,9 @@ const Basket = () => {
     setOpenBasket(false);
   };
 
-  const handleRemoveItem = (id) => {
-    removeFromBasket(id); // Use the context function directly
-  };
+  // const handleRemoveItem = (id) => {
+  //   removeFromBasket(id); // Use the context function directly
+  // };
 
   const handleExtraChange = (itemId, extra) => {
     const currentExtras =
