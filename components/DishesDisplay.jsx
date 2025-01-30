@@ -58,10 +58,10 @@ const DishesDisplay = ({ dishes, typeParams }) => {
 
   return (
     <div className="px-0 sm:px-6 py-8">
-      <div className="text-center sm:pt-16 mb-6 lg:mb-16">
+      <div className="text-center sm:pt-16 mb-6 lg:mb-10">
         <h1 className="text-6xl font-semibold">Menu</h1>
       </div>
-      <section className="px-4">
+      <section className="px-4 mb-6">
         <h2 className="text-3xl font-semibold mb-4 capitalize">
           {typeParams.split("-").join(" ")}
         </h2>

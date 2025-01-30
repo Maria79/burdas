@@ -16,7 +16,7 @@ const FinishedOrdersPage = async () => {
 
   return (
     <>
-      <div className="px-4 pt-16">
+      <div className="px-4 pt-16 bg-white rounded-lg shadow-md">
         {/* <h1 className="text-2xl font-bold">Pedidos:</h1> */}
 
         <div className="">

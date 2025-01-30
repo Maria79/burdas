@@ -60,7 +60,7 @@ const UserPage = async ({ params }) => {
 
   // Filter out orders with status.done = true
   const filteredOrders = userOrders.filter((order) => !order.status.done);
-  console.log(filteredOrders);
+  // console.log(filteredOrders);
 
   return (
     <div className="py-8 px-6 bg-gray-50 min-h-screen">

@@ -2,7 +2,7 @@
 import "@/assets/style/global.css";
 import { useEffect, useState } from "react";
 import AuthModal from "@/components/admin/AuthModal";
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 const AdminLayout = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -65,9 +65,9 @@ const AdminLayout = ({ children }) => {
           </div>
         )}
         {isAuthenticated && (
-          <div className="max-w-7xl mx-auto p-6 bg-white rounded-lg shadow-md mt-10">
-            <div className="flex justify-between items-center mb-4">
-              <h1 className="text-2xl font-bold">Admin Panel</h1>
+          <div className="max-w-full px-6 py-10">
+            <div className="flex justify-between items-center mb-12">
+              <h1 className="text-2xl font-bold"></h1>
               <button
                 onClick={handleLogout}
                 className="bg-red-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-600"
@@ -75,6 +75,7 @@ const AdminLayout = ({ children }) => {
                 Logout
               </button>
             </div>
+
             {children}
           </div>
         )}

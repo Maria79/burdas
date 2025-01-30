@@ -8,7 +8,7 @@ export const PUT = async (req, { params }) => {
     const { id } = params; // Extract the order ID from the URL
     const { status } = await req.json(); // Extract the `status` object from the request body
 
-    console.log("Request to update order status:", { id, status });
+    // console.log("Request to update order status:", { id, status });
 
     // Validate that `status` contains at least one valid field to update
     const allowedStatusFields = [
@@ -48,7 +48,7 @@ export const PUT = async (req, { params }) => {
       });
     }
 
-    console.log("Updated Order:", updatedOrder);
+    // console.log("Updated Order:", updatedOrder);
 
     return new Response(
       JSON.stringify({
