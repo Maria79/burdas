@@ -65,7 +65,7 @@ const AdminLayout = ({ children }) => {
           </div>
         )}
         {isAuthenticated && (
-          <div className="max-w-full px-6 py-10">
+          <div className="max-w-full px-0 md:px-6 py-10">
             <div className="flex justify-between items-center mb-12">
               <h1 className="text-2xl font-bold"></h1>
               <button

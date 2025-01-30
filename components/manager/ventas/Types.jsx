@@ -82,8 +82,8 @@ const Types = ({ typeCounts }) => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-6">
-      <div className="bg-white shadow-md rounded-lg p-6 border border-gray-200">
+    <div className="w-full max-w-4xl mx-auto p-2 md:p-6">
+      <div className="bg-white shadow-md rounded-lg p-2 md:p-6 border border-gray-200">
         {/* Title */}
         <h2 className="text-xl font-semibold text-gray-800 text-center mb-4">
           📊 Pedidos por Tipo de Comida

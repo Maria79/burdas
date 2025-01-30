@@ -53,17 +53,17 @@ const VentasPedidos = ({ orders }) => {
       </p>
       <div className="flex flex-col  gap-2">
         <div className="flex flex-col md:flex-row gap-2">
-          <div className="w-full md:w-1/2  bg-white shadow-md rounded-lg p-6">
+          <div className="w-full md:w-1/2 ">
             <Types typeCounts={typeCounts} />
           </div>
-          <div className="w-full md:w-1/2  bg-white shadow-md rounded-lg p-6">
+          <div className="w-full md:w-1/2">
             <Each groupedItems={groupedItems} />
           </div>
         </div>
-        <div className="w-full md:w-1/3  bg-white shadow-md rounded-lg p-6">
+        <div className="w-full md:w-1/3">
           <Extras extrasCount={extrasCount} />
         </div>
-        <div className="w-full md:w-1/2  bg-white shadow-md rounded-lg p-6">
+        <div className="w-full md:w-1/2">
           <h1 className="text-3xl font-bold text-center mt-6">Pedidos</h1>
           <Recommendations orders={orders} />
         </div>

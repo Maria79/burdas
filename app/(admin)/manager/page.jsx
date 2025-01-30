@@ -13,10 +13,10 @@ const ManagerPage = async () => {
 
   return (
     <>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center px-2 mb-4">
         <h1 className="text-2xl font-bold">Manager Panel</h1>
       </div>
-      <div className="px-4 pt-8 bg-white rounded-lg shadow-md">
+      <div className="px-2 md:px-4 pt-2 bg-white rounded-lg shadow-md">
         <Ventas orders={orders} />
       </div>
     </>

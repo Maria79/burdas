@@ -83,8 +83,8 @@ const Each = ({ groupedItems }) => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-6">
-      <div className="bg-white shadow-md rounded-lg p-6 border border-gray-200">
+    <div className="w-full max-w-4xl mx-auto  p-2 md:p-6">
+      <div className="bg-white shadow-md rounded-lg  p-2 md:p-6 border border-gray-200">
         {/* Title */}
         <h2 className="text-xl font-semibold text-gray-800 text-center">
           📊 Pedidos por Tipo
