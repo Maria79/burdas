@@ -1,4 +1,5 @@
 import Ventas from "@/components/manager/ventas/Ventas";
+import connectDB from "@/config/database";
 import Orders from "@/models/Orders";
 
 const fetchOrders = async () => {
