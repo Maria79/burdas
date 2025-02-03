@@ -1,5 +1,11 @@
 import Ventas from "@/components/manager/ventas/Ventas";
-import fetchOrders from "@/lib/fetchOrders";
+import Orders from "@/models/Orders";
+
+const fetchOrders = async () => {
+  await connectDB();
+  const orders = await Orders.find().populate("userId", "username email");
+  return JSON.parse(JSON.stringify(orders));
+};
 
 const ManagerPage = async () => {
   const orders = await fetchOrders();
