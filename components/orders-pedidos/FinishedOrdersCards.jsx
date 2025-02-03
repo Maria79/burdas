@@ -5,9 +5,11 @@ import FinishedOrderCard from "./FinishedOrderCard";
 
 const FinishedOrdersCards = ({ initialOrders }) => {
   const [filteredOrders, setFilteredOrders] = useState(initialOrders);
+  const [loading, setLoading] = useState(false);
 
   // Fetch the latest orders from the server
   const fetchOrders = async () => {
+    setLoading(true);
     try {
       const response = await fetch("/api/orders");
       if (response.ok) {
@@ -19,6 +21,7 @@ const FinishedOrdersCards = ({ initialOrders }) => {
     } catch (error) {
       console.error("Error fetching orders:", error);
     }
+    setLoading(false);
   };
 
   // Poll the server every  ...
@@ -71,17 +74,28 @@ const FinishedOrdersCards = ({ initialOrders }) => {
 
   return (
     <div className="py-8">
+      {loading && (
+        <div className="flex justify-center items-center my-4">
+          <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500 border-solid"></div>
+        </div>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-        {filteredOrders.map((order) => (
-          <FinishedOrderCard
-            key={order._id}
-            order={order}
-            backgroundColor={getBackgroundColor(order)}
-            removeOrder={removeOrder}
-            username={order.userId?.username || "Anonymous"}
-          />
-        ))}
+        {!loading &&
+          filteredOrders.map((order) => (
+            <FinishedOrderCard
+              key={order._id}
+              order={order}
+              backgroundColor={getBackgroundColor(order)}
+              removeOrder={removeOrder}
+              username={order.userId?.username || "Anonymous"}
+            />
+          ))}
       </div>
+      {!loading && filteredOrders.length === 0 && (
+        <div className="text-center mt-4">
+          <p className="text-gray-500">No orders found.</p>
+        </div>
+      )}
     </div>
   );
 };

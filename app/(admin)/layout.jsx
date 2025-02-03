@@ -6,21 +6,18 @@ import { jwtDecode } from "jwt-decode";
 
 const AdminLayout = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  // const [showModal, setShowModal] = useState(true);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const checkAuth = async () => {
+    const checkAuth = () => {
       const adminToken = localStorage.getItem("adminToken");
-      setIsAuthenticated(!!adminToken);
-      if (!adminToken) {
+
+      if (adminToken) {
         try {
-          // Decode the token and check its validity
           const decoded = jwtDecode(adminToken);
-          const isExpired = decoded.exp * 1000 < Date.now(); // Token expiration check
+          const isExpired = decoded.exp * 1000 < Date.now();
           if (!isExpired) {
             setIsAuthenticated(true);
-            // setShowModal(false);
           } else {
             localStorage.removeItem("adminToken");
           }
@@ -29,7 +26,7 @@ const AdminLayout = ({ children }) => {
           localStorage.removeItem("adminToken");
         }
       }
-      setLoading(false); // Authentication check complete
+      setLoading(false);
     };
 
     checkAuth();
@@ -38,7 +35,6 @@ const AdminLayout = ({ children }) => {
   const handleAuthSuccess = (token) => {
     localStorage.setItem("adminToken", token);
     setIsAuthenticated(true);
-    // setShowModal(false);
   };
 
   const handleLogout = () => {
@@ -46,27 +42,20 @@ const AdminLayout = ({ children }) => {
     setIsAuthenticated(false);
   };
 
-  if (loading) {
-    return (
-      <html lang="es">
-        <body className="h-screen flex items-center justify-center bg-gray-50">
-          <div className="text-gray-500 text-lg">Loading...</div>
-        </body>
-      </html>
-    );
-  }
-
   return (
     <html lang="es">
       <body className="min-h-screen w-full bg-gray-50">
-        {!isAuthenticated && (
+        {loading ? (
+          <div className="h-screen flex items-center justify-center bg-gray-50">
+            <div className="text-gray-500 text-lg">Loading...</div>
+          </div>
+        ) : !isAuthenticated ? (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
             <AuthModal onClose={handleAuthSuccess} />
           </div>
-        )}
-        {isAuthenticated && (
+        ) : (
           <div className="max-w-full px-0 md:px-6 py-10">
-            <div className="flex justify-between items-center mb-12">
+            <div className="flex justify-between items-center mb-12 px-4">
               <h1 className="text-2xl font-bold"></h1>
               <button
                 onClick={handleLogout}
@@ -75,7 +64,6 @@ const AdminLayout = ({ children }) => {
                 Logout
               </button>
             </div>
-
             {children}
           </div>
         )}

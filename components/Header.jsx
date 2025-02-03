@@ -15,10 +15,10 @@ const Header = async () => {
   const dishes = await fetchDishes();
 
   return (
-    <div className="w-full relative bg-[#760e0e]">
+    <div className="w-full relative bg-[#005c66]">
       <div className="max-w-7xl mx-auto text-white flex flex-col md:justify-between items-center px-6">
         {/* <Image src={logo} alt="" width={250} height={200} sizes="100vw" /> */}
-        <Navbar dishes={dishes} logo={logo} />
+        <Navbar dishes={dishes} />
       </div>
     </div>
   );

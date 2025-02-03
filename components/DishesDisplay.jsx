@@ -37,25 +37,6 @@ const DishesDisplay = ({ dishes, typeParams }) => {
     }
   }, [counts, localStorageKey]); // Save changes only when counts or menu type changes
 
-  // const handleSelect = () => {
-  //   dishes.forEach((dish) => {
-  //     if (counts[dish._id] > 0) {
-  //       updateBasket({
-  //         id: dish._id,
-  //         name: dish.name,
-  //         type: dish.type,
-  //         count: counts[dish._id],
-  //         price: dish.price,
-  //       });
-  //     }
-  //   });
-  // };
-
-  // const totalSelected = Object.values(counts).reduce(
-  //   (sum, count) => sum + count,
-  //   0
-  // );
-
   return (
     <div className="px-0 sm:px-6 py-8">
       <div className="text-center sm:pt-16 mb-6 lg:mb-10">

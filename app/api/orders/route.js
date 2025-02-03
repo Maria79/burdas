@@ -9,7 +9,6 @@ export const POST = async (req) => {
   try {
     // Fetch the user session
     const session = await getServerSession(authOptions);
-
     if (!session || !session.user || !session.user.id) {
       console.error("Session not found or invalid:", session);
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -29,7 +28,7 @@ export const POST = async (req) => {
       );
     }
 
-    // Validate and sanitize extras
+    // Validate basket items (sanitize)
     const sanitizedBasket = basket.map((item) => ({
       ...item,
       extras: (item.extras || []).map((extra) => {
@@ -40,23 +39,22 @@ export const POST = async (req) => {
       }),
     }));
 
-    // Sanitize the total price
+    // Sanitize and validate total price
     const sanitizedTotalPrice = parseFloat(totalPrice.replace(",", "."));
-    if (isNaN(sanitizedTotalPrice)) {
-      console.error("Invalid totalPrice:", totalPrice);
+    if (isNaN(sanitizedTotalPrice) || sanitizedTotalPrice < 0) {
       return new Response(JSON.stringify({ error: "Invalid totalPrice" }), {
         status: 400,
       });
     }
 
-    // Create a new order document
+    // Save the new order securely
     const newOrder = new Orders({
       userId: session.user.id, // User ID from the session
       basket: sanitizedBasket,
       paymentMethod,
       totalPrice: sanitizedTotalPrice.toFixed(2),
       status: {
-        received: true, // Explicitly set the value for debugging
+        received: true,
         inProgress: false,
         readyToPick: false,
         done: false,

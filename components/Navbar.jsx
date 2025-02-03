@@ -1,13 +1,14 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { useBasket } from "@/context/BasketContext";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { FaBars } from "react-icons/fa";
 import Profile from "./Profile";
 import Basket from "./Basket";
 import { signIn, useSession, getProviders } from "next-auth/react";
-import Image from "next/image";
+import logo from "@/assets/images/burda-logo.png";
 
 const MENU_ITEMS = [
   { name: "Entrantes", path: "/menu/entrantes" },
@@ -21,7 +22,7 @@ const MENU_ITEMS = [
   { name: "Bebidas", path: "/menu/bebidas" },
 ];
 
-const Navbar = ({ dishes, logo }) => {
+const Navbar = ({ dishes }) => {
   const { data: session } = useSession();
   const profileImage = session?.user.image;
 
@@ -56,9 +57,13 @@ const Navbar = ({ dishes, logo }) => {
     <>
       {/* Mobile menu */}
       <div className="w-full lg:hidden">
-        <Image src={logo} alt="" width={250} height={200} sizes="100vw" />
+        <div>
+          <Link href="/">
+            <Image src={logo} alt="Logo" width={250} height={200} />
+          </Link>
+        </div>
 
-        <div className=" w-full flex items-center justify-between relative">
+        <div className=" w-full flex items-center justify-between relative mb-2">
           {/* Menu Icon */}
           <FaBars
             size={28}
@@ -120,7 +125,11 @@ const Navbar = ({ dishes, logo }) => {
 
       {/* Desktop menu */}
       <nav className="hidden lg:flex w-full justify-between items-center py-4">
-        <Image src={logo} alt="" width={250} height={200} sizes="100vw" />
+        <div>
+          <Link href="/">
+            <Image src={logo} alt="Logo" width={250} height={200} />
+          </Link>
+        </div>
         <ul className="flex mx-auto space-x-6">
           {MENU_ITEMS.map(({ name, path }) => (
             <li key={path}>

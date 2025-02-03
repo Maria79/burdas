@@ -1,12 +1,5 @@
 import Ventas from "@/components/manager/ventas/Ventas";
-import connectDB from "@/config/database";
-import Orders from "@/models/Orders";
-
-export const fetchOrders = async () => {
-  await connectDB();
-  const orders = await Orders.find().populate("userId", "username email"); // Include username and email
-  return JSON.parse(JSON.stringify(orders)); // Convert all fields, including populated ones
-};
+import fetchOrders from "@/lib/fetchOrders";
 
 const ManagerPage = async () => {
   const orders = await fetchOrders();

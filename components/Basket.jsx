@@ -20,6 +20,7 @@ const extrasList = [
 
 const Basket = () => {
   const [openBasket, setOpenBasket] = useState(false);
+  // openExtras now uses basketItemId as keys
   const [openExtras, setOpenExtras] = useState({});
   const { basket, removeFromBasket, addExtrasToItem } = useBasket();
   const router = useRouter();
@@ -28,14 +29,15 @@ const Basket = () => {
 
   const toggleBasket = () => setOpenBasket((prev) => !prev);
 
-  const toggleExtras = (itemId) => {
+  // Toggle extras for a specific basket item using basketItemId
+  const toggleExtras = (basketItemId) => {
     setOpenExtras((prev) => ({
       ...prev,
-      [itemId]: !prev[itemId],
+      [basketItemId]: !prev[basketItemId],
     }));
 
     // Scroll the selected item into view within the basket container
-    const itemRef = document.getElementById(`basket-item-${itemId}`);
+    const itemRef = document.getElementById(`basket-item-${basketItemId}`);
     if (itemRef) {
       itemRef.scrollIntoView({
         behavior: "smooth",
@@ -51,19 +53,16 @@ const Basket = () => {
     setOpenBasket(false);
   };
 
-  // const handleRemoveItem = (id) => {
-  //   removeFromBasket(id); // Use the context function directly
-  // };
-
-  const handleExtraChange = (itemId, extra) => {
+  // Update extras for a specific basket item using its unique basketItemId
+  const handleExtraChange = (basketItemId, extra) => {
     const currentExtras =
-      basket.find((item) => item._id === itemId)?.extras || [];
+      basket.find((item) => item.basketItemId === basketItemId)?.extras || [];
     const updatedExtras = currentExtras.includes(extra.name)
       ? currentExtras.filter((e) => e !== extra.name) // Remove extra
       : [...currentExtras, extra.name]; // Add extra
 
-    // Update the basket context with the new extras
-    addExtrasToItem(itemId, updatedExtras);
+    // Update the basket context with the new extras for this specific item
+    addExtrasToItem(basketItemId, updatedExtras);
   };
 
   const formatPrice = (price) =>
@@ -93,9 +92,7 @@ const Basket = () => {
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
@@ -116,90 +113,95 @@ const Basket = () => {
             Tu pedido
           </h2>
           <div className="space-y-3 max-h-[300px] overflow-y-auto">
-            {basket.map(({ _id, type, name, count, price, extras }) => (
-              <div
-                key={_id}
-                id={`basket-item-${_id}`}
-                className="flex flex-col bg-gray-50 p-2 rounded-md shadow-sm"
-              >
-                <div className="flex justify-between items-center">
-                  <div className="flex-1 truncate">
-                    - <span className="capitalize text-gray-700">{type}</span> _{" "}
-                    <span className="capitalize font-semibold text-gray-900">
-                      {name}
-                    </span>{" "}
-                    {count > 1 && (
-                      <span className="text-gray-500 text-sm">x{count}</span>
-                    )}
+            {basket.map(
+              ({ basketItemId, _id, type, name, count, price, extras }) => (
+                <div
+                  key={basketItemId}
+                  id={`basket-item-${basketItemId}`}
+                  className="flex flex-col bg-gray-50 p-2 rounded-md shadow-sm"
+                >
+                  <div className="flex justify-between items-center">
+                    <div className="flex-1 truncate">
+                      - <span className="capitalize text-gray-700">{type}</span>{" "}
+                      _{" "}
+                      <span className="capitalize font-semibold text-gray-900">
+                        {name}
+                      </span>{" "}
+                      {count > 1 && (
+                        <span className="text-gray-500 text-sm">x{count}</span>
+                      )}
+                    </div>
+                    <div className="flex items-center space-x-4">
+                      <span className="font-medium text-gray-700">
+                        {formatPrice(
+                          count * Number(price?.replace(",", ".") || 0) +
+                            (extras?.reduce((sum, extraName) => {
+                              const extra = extrasList.find(
+                                (e) => e.name === extraName
+                              );
+                              return sum + (extra ? extra.price : 0);
+                            }, 0) || 0)
+                        )}
+                      </span>
+                      <IoRemoveCircleOutline
+                        size={24}
+                        className="text-red-500 hover:text-red-600 cursor-pointer transition duration-200"
+                        onClick={() => removeFromBasket(basketItemId)}
+                      />
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-4">
-                    <span className="font-medium text-gray-700">
-                      {formatPrice(
-                        count * Number(price?.replace(",", ".") || 0) +
-                          (extras?.reduce((sum, extraName) => {
+                  {extras && extras.length > 0 && (
+                    <div className="mt-2 pl-4 text-sm text-gray-600">
+                      <p className="font-light text-gray-700">
+                        Extras:{" "}
+                        <span>
+                          {extras.map((extraName, index) => {
                             const extra = extrasList.find(
                               (e) => e.name === extraName
                             );
-                            return sum + (extra ? extra.price : 0);
-                          }, 0) || 0)
-                      )}
-                    </span>
-                    <IoRemoveCircleOutline
-                      size={24}
-                      className="text-red-500 hover:text-red-600 cursor-pointer transition duration-200"
-                      onClick={() => removeFromBasket(_id)}
-                    />
-                  </div>
-                </div>
-                {extras && extras.length > 0 && (
-                  <div className="mt-2 pl-4 text-sm text-gray-600">
-                    <p className="font-light text-gray-700">
-                      Extras:{" "}
-                      <span>
-                        {extras.map((extraName, index) => {
-                          const extra = extrasList.find(
-                            (e) => e.name === extraName
-                          );
-                          return (
-                            <span key={index} className="italic">
-                              {extra.name}
-                              {index < extras.length - 1 && ", "}
-                            </span>
-                          );
-                        })}
-                      </span>
-                    </p>
-                  </div>
-                )}
-                <div className="mt-3">
-                  <button
-                    onClick={() => toggleExtras(_id)}
-                    className="px-3 py-1 text-sm font-semibold text-gray-800 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-md shadow-sm transition duration-200 ease-in-out transform hover:-translate-y-0.5 hover:shadow-lg focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                  >
-                    Extras
-                  </button>
-                  {openExtras[_id] && (
-                    <div className="grid grid-cols-2 gap-2 mt-2">
-                      {extrasList.map((extra) => (
-                        <label
-                          key={extra.name}
-                          className="flex items-center space-x-2"
-                        >
-                          <input
-                            type="checkbox"
-                            checked={extras?.includes(extra.name) || false}
-                            onChange={() => handleExtraChange(_id, extra)}
-                          />
-                          <span className="text-sm text-gray-700">
-                            {extra.name} ({formatPrice(extra.price)})
-                          </span>
-                        </label>
-                      ))}
+                            return (
+                              <span key={index} className="italic">
+                                {extra.name}
+                                {index < extras.length - 1 && ", "}
+                              </span>
+                            );
+                          })}
+                        </span>
+                      </p>
                     </div>
                   )}
+                  <div className="mt-3">
+                    <button
+                      onClick={() => toggleExtras(basketItemId)}
+                      className="px-3 py-1 text-sm font-semibold text-gray-800 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-md shadow-sm transition duration-200 ease-in-out transform hover:-translate-y-0.5 hover:shadow-lg focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                    >
+                      Extras
+                    </button>
+                    {openExtras[basketItemId] && (
+                      <div className="grid grid-cols-2 gap-2 mt-2">
+                        {extrasList.map((extra) => (
+                          <label
+                            key={extra.name}
+                            className="flex items-center space-x-2"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={extras?.includes(extra.name) || false}
+                              onChange={() =>
+                                handleExtraChange(basketItemId, extra)
+                              }
+                            />
+                            <span className="text-sm text-gray-700">
+                              {extra.name} ({formatPrice(extra.price)})
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            )}
           </div>
           <hr className="border-gray-200 my-4" />
           <div className="flex justify-between items-center px-2">

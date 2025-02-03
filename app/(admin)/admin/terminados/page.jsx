@@ -1,6 +1,7 @@
 import FinishedOrdersCards from "@/components/orders-pedidos/FinishedOrdersCards";
 import connectDB from "@/config/database";
 import Orders from "@/models/Orders";
+import { unstable_cache } from "next/cache";
 
 export const fetchOrders = async () => {
   await connectDB();

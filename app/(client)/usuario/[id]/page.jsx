@@ -2,21 +2,25 @@ import connectDB from "@/config/database";
 import Orders from "@/models/Orders";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/utils/authOptions"; // Update with the correct path to your NextAuth configuration
+import { unstable_cache } from "next/cache";
 
 // Fetch orders for a specific user by userId
-export const fetchOrders = async (idParams) => {
-  try {
-    await connectDB(); // Connect to the database
-    const orders = await Orders.find({ userId: idParams }).sort({
-      // Fetch all orders for the given userId
-      createdAt: -1,
-    });
-    return JSON.parse(JSON.stringify(orders)); // Convert the result to JSON-friendly format
-  } catch (error) {
-    console.error("Error fetching orders:", error);
-    return []; // Return an empty array in case of an error
-  }
-};
+export const fetchOrders = unstable_cache(
+  async (idParams) => {
+    try {
+      await connectDB();
+      const orders = await Orders.find({ userId: idParams }).sort({
+        createdAt: -1,
+      });
+      return JSON.parse(JSON.stringify(orders));
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+      return [];
+    }
+  },
+  (idParams) => [`orders-${idParams}`], // Unique cache key per user
+  { revalidate: 60 } // Revalidate every 60 seconds
+);
 
 const getStatusLabel = (status) => {
   if (status.done) return "Entregado";

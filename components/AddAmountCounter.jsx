@@ -4,10 +4,12 @@ import { useBasket } from "@/context/BasketContext";
 import { FaMinusCircle, FaPlusCircle } from "react-icons/fa";
 
 const AddAmountCounter = ({ _id, dish }) => {
-  const { counts, addToBasket, decrementFromBasket } = useBasket();
-  const count = counts[_id] || 0; // Get count from context
+  const { basket, addToBasket, decrementFromBasket } = useBasket();
+  // Calculate count for this dish by filtering basket items that match dish._id
+  const count = basket.filter((item) => item._id === _id).length;
 
   const handleIncrement = () => {
+    // Each click creates a new independent basket entry
     addToBasket({
       _id,
       name: dish.name,
@@ -18,8 +20,10 @@ const AddAmountCounter = ({ _id, dish }) => {
   };
 
   const handleDecrement = () => {
-    if (count > 0) {
-      decrementFromBasket(_id);
+    // Remove one occurrence (the first one found) of this dish from the basket
+    const basketItem = basket.find((item) => item._id === _id);
+    if (basketItem) {
+      decrementFromBasket(basketItem.basketItemId);
     }
   };
 

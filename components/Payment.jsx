@@ -3,7 +3,9 @@
 import { useBasket } from "@/context/BasketContext";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { extrasList } from "@/utils/extras";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const Payment = () => {
   const [selectedOption, setSelectedOption] = useState("onStore");
@@ -47,15 +49,27 @@ const Payment = () => {
       });
 
       if (response.ok) {
+        toast.success("Pedido enviado con éxito!", {
+          position: "top-right",
+          autoClose: 3000,
+        });
         console.log("Order submitted successfully!");
         clearBasket(); // Clear basket
         router.push("/menu/entrantes"); // Navigate to a menu page
       } else {
         const error = await response.json();
         console.error("Error submitting order:", error);
+        toast.error(`Error al enviar el pedido: ${error.message}`, {
+          position: "top-right",
+          autoClose: 3000,
+        });
       }
     } catch (error) {
       console.error("Error submitting order:", error);
+      toast.error("Error al enviar el pedido. Inténtalo de nuevo.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
     }
   };
 

@@ -3,6 +3,7 @@ import OrdersCards from "@/components/orders-pedidos/OrdersCards";
 import connectDB from "@/config/database";
 import Orders from "@/models/Orders";
 import User from "@/models/User";
+import { unstable_cache } from "next/cache";
 
 export const fetchOrders = async () => {
   await connectDB();

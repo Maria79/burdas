@@ -23,16 +23,25 @@ export const authOptions = {
         // Connect to the database
         await connectDB();
 
-        // Check if user already exists in the database
-        const userExists = await User.findOne({ email: profile.email });
+        const userEmail = profile.email;
+        if (!userEmail) {
+          console.error("No email found in Google profile.");
+          return false; // Deny sign in
+        }
 
-        if (!userExists) {
-          // If user does not exist, create a new one
-          await User.create({
-            email: profile.email,
-            username: profile.name.slice(0, 20), // Limit username to 20 characters
-            image: profile.picture, // Google profile picture
-          });
+        // Check if user already exists in the database
+        // Check if user exists, otherwise create a new one
+        let userExists = await User.findOneAndUpdate(
+          { email: userEmail },
+          { lastLogin: new Date() }, // Update last login timestamp
+          { new: true, upsert: true, setDefaultsOnInsert: true }
+        );
+
+        if (!userExists.username) {
+          // Assign a sanitized username if missing
+          userExists.username =
+            profile.name?.replace(/[^a-zA-Z0-9]/g, "").slice(0, 20) || "User";
+          await userExists.save();
         }
 
         return true; // Allow sign in
@@ -41,12 +50,17 @@ export const authOptions = {
         return false; // Deny sign in on error
       }
     },
+    /**
+     * Runs when a session is created.
+     * Attaches the MongoDB user ID to the session.
+     */
     async session({ session }) {
       try {
         await connectDB();
 
         // Attach user ID to session
         const user = await User.findOne({ email: session.user.email });
+
         if (user) {
           session.user.id = user._id.toString();
         } else {
@@ -61,6 +75,10 @@ export const authOptions = {
     },
   },
   secret: process.env.NEXTAUTH_SECRET, // Ensure this is set in your environment variables
+  jwt: {
+    secret: process.env.NEXTAUTH_SECRET,
+    encryption: true,
+  },
 };
 
 export default authOptions;

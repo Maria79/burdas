@@ -7,7 +7,9 @@ import BasketWrapper from "@/components/BasketWrapper";
 export const fetchOrders = async (idParams) => {
   try {
     await connectDB();
-    const orders = await Orders.find({ userId: idParams });
+    const orders = await Orders.find({ userId: idParams }).select(
+      "basket totalPrice"
+    );
     return JSON.parse(JSON.stringify(orders));
   } catch (error) {
     console.error("Error fetching orders:", error);
